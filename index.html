@@ -2,930 +2,719 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Health — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Summary — Health</title>
   <style>
     :root {
-      --bg: #f5f5f7;
-      --surface: #ffffff;
-      --surface2: #f5f5f7;
-      --border: rgba(0,0,0,0.08);
-      --text: #1d1d1f;
-      --text2: #6e6e73;
-      --text3: #a1a1a6;
-      --blue: #0071e3;
-      --blue-light: #e8f1fb;
-      --green: #30d158;
-      --green-light: #e4f8eb;
-      --orange: #ff9f0a;
-      --orange-light: #fff4e0;
-      --purple: #bf5af2;
-      --purple-light: #f5ebfe;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --radius: 18px;
-      --radius-sm: 12px;
+      --bg: #F2F2F7;
+      --surface: #FFFFFF;
+      --fill: rgba(118,118,128,0.12);
+      --sep: rgba(60,60,67,0.36);
+      --label: #000000;
+      --label2: rgba(60,60,67,0.6);
+      --label3: rgba(60,60,67,0.3);
+      --blue: #007AFF;
+      --green: #34C759;
+      --orange: #FF9500;
+      --red: #FF3B30;
+      --purple: #AF52DE;
+      --teal: #5AC8FA;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 14px;
+      color: var(--label);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      font-size: 17px;
       -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
+      padding-bottom: 83px;
     }
 
-    nav {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* NAV BAR */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      height: 44px;
+      background: rgba(242,242,247,0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 0.5px solid var(--sep);
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 16px;
+    }
+    .nav-title {
+      font-size: 17px; font-weight: 600; letter-spacing: -0.41px;
+      opacity: 0; transition: opacity 0.2s; position: absolute;
+    }
+    .nav-title.show { opacity: 1; }
+    .nav-right { position: absolute; right: 16px; }
+    .nav-btn {
+      background: none; border: none; color: var(--blue);
+      font-size: 17px; cursor: pointer; padding: 4px;
+      display: flex; align-items: center;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* LARGE TITLE */
+    .large-title-wrap { padding: 8px 16px 4px; }
+    .large-title { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
+    .large-sub { font-size: 13px; color: var(--label2); margin-top: 3px; }
+
+    /* CONTENT */
+    main { max-width: 680px; margin: 0 auto; }
+    .gap { height: 10px; }
+    .gap-lg { height: 18px; }
+
+    /* SECTION HEADER */
+    .sh {
+      font-size: 13px; color: var(--label2);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 18px 32px 6px;
     }
 
-    .nav-logo { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; text-decoration: none; }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { color: var(--text2); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-links a.active { color: var(--blue); font-weight: 500; }
-    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #0071e3, #30d158); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; }
-
-    main { max-width: 1080px; margin: 0 auto; padding: 40px 32px; }
-
-    .page-header { margin-bottom: 32px; animation: fadeUp 0.4s ease both; }
-    .page-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
-    .page-header .meta { color: var(--text2); font-size: 14px; margin-top: 4px; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* LIST GROUP */
+    .lg { background: var(--surface); border-radius: 10px; margin: 0 16px; overflow: hidden; }
+    .row {
+      display: flex; align-items: center; min-height: 46px;
+      padding: 10px 16px; gap: 12px; position: relative;
+      text-decoration: none; color: var(--label);
     }
-
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-    .col-3  { grid-column: span 3; }
-    .col-4  { grid-column: span 4; }
-    .col-6  { grid-column: span 6; }
-    .col-8  { grid-column: span 8; }
-    .col-12 { grid-column: span 12; }
-
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow-sm);
-      animation: fadeUp 0.5s ease both;
+    .row + .row::before {
+      content: ''; position: absolute; top: 0; left: 56px; right: 0;
+      height: 0.5px; background: var(--sep);
     }
+    .ri {
+      width: 28px; height: 28px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .rb { flex: 1; min-width: 0; }
+    .rl { font-size: 17px; letter-spacing: -0.41px; }
+    .rs { font-size: 12px; color: var(--label2); margin-top: 1px; }
+    .rr { display: flex; align-items: center; gap: 4px; }
+    .rv { font-size: 17px; color: var(--label2); letter-spacing: -0.41px; }
+    .ru { font-size: 13px; color: var(--label3); }
+    .chv { color: var(--label3); font-size: 14px; margin-left: 2px; }
+    .prog {
+      height: 4px; background: var(--fill); border-radius: 2px;
+      overflow: hidden; margin-top: 5px; width: 140px;
+    }
+    .pf { height: 100%; border-radius: 2px; transition: width 1s ease; }
 
-    .card:nth-child(1) { animation-delay:0.04s }
-    .card:nth-child(2) { animation-delay:0.08s }
-    .card:nth-child(3) { animation-delay:0.12s }
-    .card:nth-child(4) { animation-delay:0.16s }
-    .card:nth-child(5) { animation-delay:0.20s }
-    .card:nth-child(6) { animation-delay:0.24s }
-    .card:nth-child(7) { animation-delay:0.28s }
-    .card:nth-child(8) { animation-delay:0.32s }
-    .card:nth-child(9) { animation-delay:0.36s }
-
-    .metric-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
-    .metric-label { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
-    .metric-value { font-size: 34px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
-    .metric-unit  { font-size: 16px; font-weight: 400; color: var(--text2); margin-left: 2px; letter-spacing: 0; }
-
-    .metric-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; margin-top: 8px; padding: 3px 8px; border-radius: 20px; }
-    .delta-green  { background: var(--green-light);  color: #1a7a35; }
-    .delta-gray   { background: var(--surface2);     color: var(--text2); }
-    .delta-blue   { background: var(--blue-light);   color: #004fa3; }
-
-    .progress-wrap { margin-top: 14px; }
-    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text3); margin-bottom: 6px; }
-    .progress-track { height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 3px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
-    .fill-blue   { background: var(--blue); }
-    .fill-green  { background: var(--green); }
-    .fill-orange { background: var(--orange); }
-    .fill-purple { background: var(--purple); }
-
-    .section-label { grid-column: span 12; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-top: 8px; padding-bottom: 2px; }
-
-    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .card-title  { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; }
-    .card-action { font-size: 13px; color: var(--blue); cursor: pointer; font-weight: 500; text-decoration: none; }
-
-    .macro-row { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
-    .macro-item { display: flex; align-items: center; gap: 12px; }
-    .macro-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .macro-info { flex: 1; }
-    .macro-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-    .macro-val  { font-size: 12px; color: var(--text2); white-space: nowrap; }
-
-    .workout-list { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
-    .workout-row  { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
-    .workout-row:last-child { border-bottom: none; }
-    .workout-left { display: flex; align-items: center; }
-    .workout-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-right: 12px; flex-shrink: 0; }
-    .workout-name { font-size: 14px; font-weight: 500; }
-    .workout-sub  { font-size: 12px; color: var(--text2); margin-top: 1px; }
-    .workout-tag  { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
-
-    .spark-wrap { margin-top: 12px; }
-    svg.spark   { width: 100%; height: 70px; overflow: visible; }
-    .spark-footer { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-top: 8px; }
-    .spark-footer b { color: var(--text); font-weight: 600; }
-
-    .streak-grid { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 14px; }
-    .streak-day  { width: 30px; height: 30px; border-radius: 8px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: var(--text3); }
-    .streak-day.logged { background: var(--green-light); color: #1a7a35; }
-    .streak-day.today  { background: var(--green); color: white; }
-    .streak-footer { margin-top: 14px; display: flex; gap: 20px; font-size: 13px; color: var(--text2); }
-    .streak-footer b { color: var(--text); }
-
-    .log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-    .field { display: flex; flex-direction: column; gap: 5px; }
-    .field label { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; }
-    .field input { background: var(--surface2); border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 14px; padding: 10px 12px; outline: none; transition: border-color 0.2s, background 0.2s; width: 100%; }
-    .field input:focus { border-color: var(--blue); background: white; }
-    .field input::placeholder { color: var(--text3); }
-    .field.full { grid-column: span 2; }
-
-    .btn-primary { width: 100%; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; font-weight: 600; padding: 12px; cursor: pointer; margin-top: 4px; transition: background 0.2s, transform 0.1s; }
-    .btn-primary:hover  { background: #0077ed; }
-    .btn-primary:active { transform: scale(0.99); }
+    /* RINGS CARD */
+    .rings-card {
+      background: var(--surface); border-radius: 10px;
+      margin: 0 16px; padding: 16px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .ring-stats { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .rs-row { display: flex; align-items: center; gap: 10px; }
+    .rs-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .rs-label { font-size: 12px; color: var(--label2); }
+    .rs-val { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
+    .rs-unit { font-size: 12px; color: var(--label2); }
 
     /* GOAL BANNER */
     .goal-banner {
-      background: linear-gradient(135deg, #0071e3 0%, #30d158 100%);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0;
+      background: linear-gradient(135deg, #007AFF 0%, #34C759 100%);
+      border-radius: 10px; margin: 0 16px; padding: 16px; color: white;
     }
+    .goal-banner h3 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .goal-banner p { font-size: 13px; opacity: 0.85; }
+    .gb-stats { display: flex; gap: 20px; margin-top: 12px; }
+    .gb-val { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .gb-lbl { font-size: 11px; opacity: 0.8; }
 
-    .goal-banner-left h3 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
-    .goal-banner-left p  { font-size: 13px; opacity: 0.85; }
-
-    .goal-banner-right {
-      display: flex;
-      gap: 24px;
-      text-align: center;
-    }
-
-    .goal-stat-val { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-    .goal-stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-
-    /* AI INSIGHTS */
-    .insights-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
+    /* INSIGHTS */
     .insight-item {
-      display: flex;
-      gap: 12px;
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      background: var(--surface2);
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--text);
-      animation: fadeUp 0.4s ease both;
+      display: flex; gap: 12px; padding: 12px 16px;
+      font-size: 15px; line-height: 1.5; position: relative;
     }
-
-    .insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-
+    .insight-item + .insight-item::before {
+      content: ''; position: absolute; top: 0; left: 48px; right: 0;
+      height: 0.5px; background: var(--sep);
+    }
     .insight-loading {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 12px;
-      color: var(--text2);
-      font-size: 13px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px; color: var(--label2); font-size: 15px;
     }
-
     .spinner {
       width: 16px; height: 16px;
-      border: 2px solid var(--border);
-      border-top-color: var(--blue);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      flex-shrink: 0;
+      border: 2px solid var(--sep); border-top-color: var(--blue);
+      border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* AI CHAT */
-    .chat-wrap {
-      display: flex;
-      flex-direction: column;
-      height: 340px;
+    /* CHAT */
+    .chat-wrap { padding: 12px 16px 8px; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .chip {
+      font-size: 13px; font-weight: 500; padding: 5px 12px;
+      border-radius: 16px; background: var(--fill); color: var(--blue);
+      cursor: pointer; border: none; font-family: inherit;
     }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 4px 0 12px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
+    .msgs {
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 260px; overflow-y: auto; padding: 4px 0 8px;
+      scrollbar-width: none;
     }
-
+    .msgs::-webkit-scrollbar { display: none; }
     .msg {
-      max-width: 85%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 13px;
-      line-height: 1.55;
+      max-width: 80%; padding: 9px 13px; border-radius: 18px;
+      font-size: 15px; line-height: 1.45;
     }
-
-    .msg.user {
-      background: var(--blue);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
+    .msg.user { background: var(--blue); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg.bot  { background: var(--fill); color: var(--label); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg.bot.loading { display: flex; align-items: center; gap: 6px; color: var(--label2); }
+    .chat-row { display: flex; gap: 8px; align-items: center; padding-top: 8px; }
+    .chat-in {
+      flex: 1; background: var(--fill); border: none; border-radius: 20px;
+      color: var(--label); font-family: inherit; font-size: 15px; padding: 9px 16px; outline: none;
     }
-
-    .msg.assistant {
-      background: var(--surface2);
-      color: var(--text);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-
-    .msg.assistant.loading {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text2);
-    }
-
-    .chat-input-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .chat-input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid transparent;
-      border-radius: 20px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 13px;
-      padding: 10px 16px;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .chat-input:focus { border-color: var(--blue); background: white; }
-    .chat-input::placeholder { color: var(--text3); }
-
+    .chat-in::placeholder { color: var(--label3); }
     .chat-send {
-      width: 36px; height: 36px;
-      background: var(--blue);
-      border: none;
-      border-radius: 50%;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.2s, transform 0.1s;
+      width: 32px; height: 32px; background: var(--blue); border: none;
+      border-radius: 50%; color: white; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .chat-send:hover  { background: #0077ed; }
-    .chat-send:active { transform: scale(0.95); }
+    /* LOG FORM */
+    .log-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 16px; min-height: 44px; position: relative;
+    }
+    .log-row + .log-row::before {
+      content: ''; position: absolute; top: 0; left: 16px; right: 0;
+      height: 0.5px; background: var(--sep);
+    }
+    .log-row label { font-size: 17px; letter-spacing: -0.41px; }
+    .log-in {
+      background: none; border: none; color: var(--label2);
+      font-family: inherit; font-size: 17px; text-align: right;
+      outline: none; width: 150px; letter-spacing: -0.41px;
+    }
+    .log-in::placeholder { color: var(--label3); }
+    .btn-blue {
+      display: block; width: calc(100% - 32px); margin: 12px 16px 4px;
+      background: var(--blue); color: white; border: none; border-radius: 12px;
+      font-family: inherit; font-size: 17px; font-weight: 600; padding: 14px;
+      cursor: pointer; letter-spacing: -0.41px;
+    }
+    .btn-blue:active { opacity: 0.8; }
 
-    .quick-prompts {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
+    /* WORKOUTS */
+    .wo-item {
+      display: flex; align-items: center; padding: 10px 16px;
+      gap: 12px; min-height: 58px; position: relative;
+    }
+    .wo-item + .wo-item::before {
+      content: ''; position: absolute; top: 0; left: 60px; right: 0;
+      height: 0.5px; background: var(--sep);
+    }
+    .wo-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .wo-name { font-size: 15px; font-weight: 500; }
+    .wo-sub { font-size: 13px; color: var(--label2); margin-top: 1px; }
+    .wo-tag {
+      margin-left: auto; font-size: 12px; font-weight: 500;
+      padding: 3px 8px; border-radius: 6px;
     }
 
-    .quick-prompt {
-      font-size: 11px;
-      font-weight: 500;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background: var(--blue-light);
-      color: var(--blue);
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-      transition: background 0.2s;
+    /* SPARKLINE */
+    .spark-wrap { padding: 8px 16px 12px; }
+    .spark-foot { display: flex; justify-content: space-between; font-size: 12px; color: var(--label2); margin-top: 8px; }
+    .spark-foot b { color: var(--label); font-weight: 600; }
+
+    /* STREAK */
+    .streak-wrap { padding: 12px 16px; }
+    .streak-grid { display: flex; gap: 4px; flex-wrap: wrap; }
+    .sd {
+      width: 31px; height: 31px; border-radius: 8px; background: var(--fill);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 500; color: var(--label3);
     }
+    .sd.on  { background: rgba(52,199,89,0.15); color: #1a7a35; }
+    .sd.now { background: var(--green); color: white; }
+    .streak-foot { display: flex; gap: 16px; font-size: 13px; color: var(--label2); margin-top: 10px; }
+    .streak-foot b { color: var(--label); }
 
-    .quick-prompt:hover { background: #d4e9f9; }
-
+    /* TOAST */
     #toast {
-      position: fixed; bottom: 32px; left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(29,29,31,0.92); backdrop-filter: blur(20px);
-      color: white; font-size: 13px; font-weight: 500;
-      padding: 12px 20px; border-radius: 20px;
-      opacity: 0; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: fixed; bottom: 96px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+      color: white; font-size: 14px; font-weight: 500;
+      padding: 11px 18px; border-radius: 20px;
+      opacity: 0; transition: all 0.25s ease;
       pointer-events: none; white-space: nowrap;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    @media (max-width: 860px) {
-      main { padding: 24px 16px; }
-      .col-3, .col-4, .col-6, .col-8 { grid-column: span 12; }
+    /* BOTTOM TAB BAR */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 83px; padding-bottom: 20px;
+      background: rgba(242,242,247,0.92);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-top: 0.5px solid var(--sep);
+      display: flex; z-index: 100;
     }
+    .tab {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: flex-start; padding-top: 10px; gap: 3px;
+      text-decoration: none; color: var(--label2);
+      font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
+    }
+    .tab.on { color: var(--blue); }
+    .tab svg { width: 25px; height: 25px; }
+
+    @media (max-width: 680px) { .large-title { font-size: 28px; } }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="nav-logo">Health</a>
-  <ul class="nav-links">
-    <li><a href="index.html" class="active">Summary</a></li>
-    <li><a href="#" style="opacity:0.4;pointer-events:none">Nutrition</a></li>
-    <li><a href="goals.html">Goals</a></li>
-    <li><a href="#" style="opacity:0.4;pointer-events:none">Trends</a></li>
-  </ul>
-  <div style="display:flex;align-items:center;gap:12px">
-      <button onclick="syncData()" id="syncBtn" style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-family:inherit;font-size:12px;font-weight:500;color:var(--text2);padding:6px 14px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px">
-        <span id="syncIcon">↻</span> <span id="syncLabel">Sync</span>
-      </button>
-      <div class="avatar">ND</div>
-    </div>
-</nav>
+<header class="nav-bar">
+  <span class="nav-title" id="navTitle">Summary</span>
+  <div class="nav-right">
+    <button class="nav-btn" id="syncBtn" onclick="syncData()" title="Sync">
+      <svg id="syncSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="large-title-wrap" id="ltWrap">
+  <h1 class="large-title" id="greeting">Good morning, Nishant.</h1>
+  <p class="large-sub" id="dateStr"></p>
+</div>
 
 <main>
-  <div class="page-header">
-    <h1 id="greeting">Good morning, Nishant.</h1>
-    <div class="meta" id="dateStr"></div>
+  <div class="gap"></div>
+
+  <!-- GOAL BANNER -->
+  <div class="goal-banner" id="goalBanner">
+    <h3 id="bannerTitle">Set your goals to get started</h3>
+    <p id="bannerSub">Visit Goals to personalize your dashboard and AI insights.</p>
+    <div class="gb-stats" id="bannerStats" style="display:none">
+      <div><div class="gb-val" id="bannerToLose">—</div><div class="gb-lbl">lbs to go</div></div>
+      <div><div class="gb-val" id="bannerWeeks">—</div><div class="gb-lbl">weeks left</div></div>
+      <div><div class="gb-val" id="bannerPct">—</div><div class="gb-lbl">complete</div></div>
+    </div>
+    <a href="goals.html" id="bannerCta" style="display:inline-block;margin-top:10px;color:white;font-size:13px;font-weight:600;text-decoration:none;opacity:0.9">Set Goals →</a>
   </div>
 
-  <div class="grid">
+  <div class="gap-lg"></div>
 
-    <!-- GOAL BANNER -->
-    <div class="col-12" style="animation: fadeUp 0.4s ease both;">
-      <div class="goal-banner" id="goalBanner">
-        <div class="goal-banner-left">
-          <h3 id="bannerTitle">Set your goals to get started</h3>
-          <p id="bannerSub">Visit the Goals page to personalize your dashboard and AI insights.</p>
-        </div>
-        <div class="goal-banner-right" id="bannerStats" style="display:none">
-          <div>
-            <div class="goal-stat-val" id="bannerToLose">—</div>
-            <div class="goal-stat-label">lbs to go</div>
-          </div>
-          <div>
-            <div class="goal-stat-val" id="bannerWeeks">—</div>
-            <div class="goal-stat-label">weeks left</div>
-          </div>
-          <div>
-            <div class="goal-stat-val" id="bannerPct">—</div>
-            <div class="goal-stat-label">complete</div>
-          </div>
-        </div>
-        <a href="goals.html" id="bannerCta" style="color:white;font-size:13px;font-weight:600;text-decoration:none;opacity:0.9">Set Goals →</a>
-      </div>
+  <!-- ACTIVITY RINGS -->
+  <div class="sh">Activity</div>
+  <div class="rings-card">
+    <svg width="114" height="114" viewBox="0 0 114 114" style="flex-shrink:0">
+      <circle cx="57" cy="57" r="50" fill="none" stroke="rgba(52,199,89,0.2)"  stroke-width="9"/>
+      <circle cx="57" cy="57" r="37" fill="none" stroke="rgba(255,149,0,0.2)" stroke-width="9"/>
+      <circle cx="57" cy="57" r="24" fill="none" stroke="rgba(0,122,255,0.2)"  stroke-width="9"/>
+      <circle id="rSteps" cx="57" cy="57" r="50" fill="none" stroke="#34C759" stroke-width="9" stroke-linecap="round" transform="rotate(-90 57 57)" stroke-dasharray="0 314.2"/>
+      <circle id="rCal"   cx="57" cy="57" r="37" fill="none" stroke="#FF9500" stroke-width="9" stroke-linecap="round" transform="rotate(-90 57 57)" stroke-dasharray="0 232.5"/>
+      <circle id="rEx"    cx="57" cy="57" r="24" fill="none" stroke="#007AFF" stroke-width="9" stroke-linecap="round" transform="rotate(-90 57 57)" stroke-dasharray="0 150.8"/>
+    </svg>
+    <div class="ring-stats">
+      <div class="rs-row"><div class="rs-dot" style="background:#34C759"></div><div><div class="rs-label">Steps</div><div><span class="rs-val" id="stepsVal">—</span></div></div></div>
+      <div class="rs-row"><div class="rs-dot" style="background:#FF9500"></div><div><div class="rs-label">Active Cal</div><div><span class="rs-val" id="calVal">—</span> <span class="rs-unit">kcal</span></div></div></div>
+      <div class="rs-row"><div class="rs-dot" style="background:#007AFF"></div><div><div class="rs-label">Exercise</div><div><span class="rs-val" id="exerciseVal">—</span> <span class="rs-unit">min</span></div></div></div>
     </div>
+  </div>
 
-    <!-- METRIC CARDS -->
-    <div class="card col-3">
-      <div class="metric-icon" style="background:var(--blue-light)">⚖️</div>
-      <div class="metric-label">Weight</div>
-      <div><span class="metric-value" id="weightVal">—</span><span class="metric-unit">lbs</span></div>
-      <div class="metric-delta delta-green">↓ 1.2 lbs this week</div>
-      <div class="progress-wrap">
-        <div class="progress-meta"><span id="weightGoalLabel">Goal: 170 lbs</span><span id="weightPct">67%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-blue" id="weightBar" style="width:67%"></div></div>
-      </div>
+  <div class="gap"></div>
+
+  <!-- HEALTH METRICS -->
+  <div class="lg">
+    <div class="row">
+      <div class="ri" style="background:rgba(0,122,255,0.12)">⚖️</div>
+      <div class="rb"><div class="rl">Weight</div><div class="prog"><div class="pf" id="weightBar" style="width:0;background:#007AFF"></div></div></div>
+      <div class="rr"><span class="rv" id="weightVal">—</span><span class="ru">lbs</span><span class="chv">›</span></div>
     </div>
-
-    <div class="card col-3">
-      <div class="metric-icon" style="background:var(--orange-light)">🔥</div>
-      <div class="metric-label">Calories</div>
-      <div><span class="metric-value" id="calVal">—</span><span class="metric-unit">kcal</span></div>
-      <div class="metric-delta delta-green">160 under target</div>
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Target: 2,000</span><span>92%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-orange" style="width:92%"></div></div>
-      </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(175,82,222,0.12)">💧</div>
+      <div class="rb"><div class="rl">Water</div><div class="prog"><div class="pf" id="waterBar" style="width:75%;background:#AF52DE"></div></div></div>
+      <div class="rr"><span class="rv"><span id="waterVal">6</span> / <span id="waterGoalDisplay">8</span></span><span class="chv">›</span></div>
     </div>
-
-    <div class="card col-3">
-      <div class="metric-icon" style="background:var(--green-light)">👟</div>
-      <div class="metric-label">Steps</div>
-      <div><span class="metric-value" id="stepsVal">—</span></div>
-      <div class="metric-delta delta-gray" id="stepsDelta">2,760 to goal</div>
-      <div class="progress-wrap">
-        <div class="progress-meta"><span id="stepsGoalLabel">Goal: 10,000</span><span id="stepsPct">72%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-green" id="stepsBar" style="width:72%"></div></div>
-      </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(90,200,250,0.12)">📍</div>
+      <div class="rb"><div class="rl">Distance</div></div>
+      <div class="rr"><span class="rv" id="distVal">—</span><span class="ru">mi</span><span class="chv">›</span></div>
     </div>
-
-    <div class="card col-3">
-      <div class="metric-icon" style="background:var(--purple-light)">💧</div>
-      <div class="metric-label">Water</div>
-      <div><span class="metric-value" id="waterVal">6</span><span class="metric-unit">/ <span id="waterGoalDisplay">8</span></span></div>
-      <div class="metric-delta delta-blue">On track</div>
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Daily goal</span><span id="waterPct">75%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-purple" id="waterBar" style="width:75%"></div></div>
-      </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(255,45,85,0.12)">❤️</div>
+      <div class="rb"><div class="rl">Heart Rate</div></div>
+      <div class="rr"><span class="rv" id="hrVal">—</span><span class="ru">bpm</span><span class="chv">›</span></div>
     </div>
-
-    <!-- AI INSIGHTS -->
-    <div class="section-label">AI Insights</div>
-
-    <div class="card col-6">
-      <div class="card-header">
-        <div class="card-title">Today's Insights</div>
-        <div class="card-action" onclick="loadInsights()">Refresh</div>
-      </div>
-      <div class="insights-list" id="insightsList">
-        <div class="insight-loading"><div class="spinner"></div> Analyzing your data...</div>
-      </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(175,82,222,0.12)">💜</div>
+      <div class="rb"><div class="rl">HRV</div></div>
+      <div class="rr"><span class="rv" id="hrvVal">—</span><span class="ru">ms</span><span class="chv">›</span></div>
     </div>
-
-    <!-- AI CHAT -->
-    <div class="card col-6">
-      <div class="card-header">
-        <div class="card-title">Ask Your Health Assistant</div>
-      </div>
-      <div class="chat-wrap">
-        <div class="quick-prompts">
-          <button class="quick-prompt" onclick="sendQuick('Am I on track for my weight goal?')">On track?</button>
-          <button class="quick-prompt" onclick="sendQuick('What should I eat today to hit my protein goal?')">Protein tips</button>
-          <button class="quick-prompt" onclick="sendQuick('How many more steps do I need today?')">Steps left</button>
-          <button class="quick-prompt" onclick="sendQuick('Is my calorie logging accurate based on my weight trend?')">Calorie check</button>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="msg assistant">Hi! I'm your health assistant. I know your goals and today's data. Ask me anything about your progress. 💪</div>
-        </div>
-        <div class="chat-input-row">
-          <input class="chat-input" id="chatInput" placeholder="Ask about your progress..." onkeydown="if(event.key==='Enter') sendChat()"/>
-          <button class="chat-send" onclick="sendChat()">↑</button>
-        </div>
-      </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(0,122,255,0.12)">🌙</div>
+      <div class="rb"><div class="rl">Sleep</div></div>
+      <div class="rr"><span class="rv" id="sleepVal">—</span><span class="ru">hrs</span><span class="chv">›</span></div>
     </div>
+  </div>
 
-    <!-- NUTRITION & ACTIVITY -->
-    <div class="section-label">Nutrition & Activity</div>
+  <div class="gap-lg"></div>
 
-    <div class="card col-4">
-      <div class="card-header"><div class="card-title">Macros</div><div class="card-action">Details</div></div>
-      <div class="macro-row">
-        <div class="macro-item">
-          <div class="macro-dot" style="background:var(--blue)"></div>
-          <div class="macro-info">
-            <div class="macro-name">Protein</div>
-            <div class="progress-track"><div class="progress-fill fill-blue" style="width:87%"></div></div>
-          </div>
-          <div class="macro-val"><b>142g</b> / 165g</div>
-        </div>
-        <div class="macro-item">
-          <div class="macro-dot" style="background:var(--orange)"></div>
-          <div class="macro-info">
-            <div class="macro-name">Carbohydrates</div>
-            <div class="progress-track"><div class="progress-fill fill-orange" style="width:75%"></div></div>
-          </div>
-          <div class="macro-val"><b>165g</b> / 220g</div>
-        </div>
-        <div class="macro-item">
-          <div class="macro-dot" style="background:var(--purple)"></div>
-          <div class="macro-info">
-            <div class="macro-name">Fat</div>
-            <div class="progress-track"><div class="progress-fill fill-purple" style="width:60%"></div></div>
-          </div>
-          <div class="macro-val"><b>58g</b> / 65g</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card col-4">
-      <div class="card-header"><div class="card-title">Recent Activity</div><div class="card-action">All</div></div>
-      <div class="workout-list" id="workoutList">
-        <div class="workout-row">
-          <div class="workout-left">
-            <div class="workout-icon" style="background:var(--blue-light)">🏃</div>
-            <div><div class="workout-name">Morning Run</div><div class="workout-sub">3.2 mi · 28 min · 310 cal</div></div>
-          </div>
-          <div class="workout-tag" style="background:var(--blue-light);color:#004fa3">Today</div>
-        </div>
-        <div class="workout-row">
-          <div class="workout-left">
-            <div class="workout-icon" style="background:var(--green-light)">🏋️</div>
-            <div><div class="workout-name">Strength Training</div><div class="workout-sub">45 min · 280 cal</div></div>
-          </div>
-          <div class="workout-tag" style="background:var(--surface2);color:var(--text2)">Yesterday</div>
-        </div>
-        <div class="workout-row">
-          <div class="workout-left">
-            <div class="workout-icon" style="background:var(--purple-light)">🧘</div>
-            <div><div class="workout-name">Yoga</div><div class="workout-sub">30 min · 120 cal</div></div>
-          </div>
-          <div class="workout-tag" style="background:var(--surface2);color:var(--text2)">2 days ago</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card col-4">
-      <div class="card-header"><div class="card-title">Weight Trend</div><div class="card-action">7 days</div></div>
-      <div class="spark-wrap"><svg class="spark" viewBox="0 0 300 70" id="sparkSvg"></svg></div>
-      <div class="spark-footer">
+  <!-- WEIGHT SPARKLINE -->
+  <div class="sh">Weight Trend</div>
+  <div class="lg">
+    <div class="spark-wrap">
+      <svg width="100%" height="70" viewBox="0 0 300 70" id="sparkSvg" style="display:block"></svg>
+      <div class="spark-foot">
         <span>7 days ago: <b>184.2 lbs</b></span>
-        <span>Today: <b style="color:var(--blue)">182.0 lbs</b></span>
+        <span>Today: <b style="color:#007AFF">182.0 lbs</b></span>
       </div>
     </div>
-
-    <!-- LOG -->
-    <div class="section-label">Log Today</div>
-
-    <div class="card col-6">
-      <div class="card-header"><div class="card-title">Log Entry</div></div>
-      <div class="log-grid">
-        <div class="field"><label>Weight (lbs)</label><input type="number" id="logWeight" placeholder="e.g. 182.5" step="0.1"/></div>
-        <div class="field"><label>Calories</label><input type="number" id="logCalories" placeholder="e.g. 1800"/></div>
-        <div class="field"><label>Protein (g)</label><input type="number" id="logProtein" placeholder="e.g. 140"/></div>
-        <div class="field"><label>Steps</label><input type="number" id="logSteps" placeholder="e.g. 8500"/></div>
-        <div class="field"><label>Water (glasses)</label><input type="number" id="logWater" placeholder="e.g. 7"/></div>
-        <div class="field"><label>Workout</label><input type="text" id="logWorkout" placeholder="e.g. Run 3 miles"/></div>
-        <div class="field full"><button class="btn-primary" onclick="logData()">Save Entry</button></div>
-      </div>
-    </div>
-
-    <div class="card col-6">
-      <div class="card-header"><div class="card-title">Logging Streak</div><div class="card-action">21 days</div></div>
-      <div class="streak-grid" id="streakGrid"></div>
-      <div class="streak-footer">
-        <span>🔥 Current: <b>12 days</b></span>
-        <span>Best: <b>18 days</b></span>
-        <span>This month: <b>16 / 19</b></span>
-      </div>
-    </div>
-
   </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- AI INSIGHTS -->
+  <div class="sh">AI Insights <span style="font-size:11px;margin-left:6px;cursor:pointer;color:var(--blue);text-transform:none;letter-spacing:0" onclick="loadInsights()">Refresh</span></div>
+  <div class="lg" id="insightsList">
+    <div class="insight-loading"><div class="spinner"></div> Analyzing your data…</div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- CHAT -->
+  <div class="sh">Health Assistant</div>
+  <div class="lg">
+    <div class="chat-wrap">
+      <div class="chips">
+        <button class="chip" onclick="sendQuick('Am I on track for my weight goal?')">On track?</button>
+        <button class="chip" onclick="sendQuick('What should I eat to hit my protein goal?')">Protein tips</button>
+        <button class="chip" onclick="sendQuick('How many more steps do I need today?')">Steps left</button>
+      </div>
+      <div class="msgs" id="chatMessages">
+        <div class="msg bot">Hi! I'm your health assistant. Ask me anything about your progress. 💪</div>
+      </div>
+      <div class="chat-row">
+        <input class="chat-in" id="chatInput" placeholder="Ask about your health…" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="chat-send" onclick="sendChat()">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- NUTRITION -->
+  <div class="sh">Nutrition</div>
+  <div class="lg">
+    <div class="row">
+      <div class="ri" style="background:rgba(0,122,255,0.12)">🍗</div>
+      <div class="rb"><div class="rl">Protein</div><div class="prog"><div class="pf" style="width:87%;background:#007AFF"></div></div></div>
+      <div class="rr"><span class="rv">142g</span><span class="ru"> / 165g</span></div>
+    </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(255,149,0,0.12)">🌾</div>
+      <div class="rb"><div class="rl">Carbs</div><div class="prog"><div class="pf" style="width:75%;background:#FF9500"></div></div></div>
+      <div class="rr"><span class="rv">165g</span><span class="ru"> / 220g</span></div>
+    </div>
+    <div class="row">
+      <div class="ri" style="background:rgba(175,82,222,0.12)">🥑</div>
+      <div class="rb"><div class="rl">Fat</div><div class="prog"><div class="pf" style="width:60%;background:#AF52DE"></div></div></div>
+      <div class="rr"><span class="rv">58g</span><span class="ru"> / 65g</span></div>
+    </div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- RECENT ACTIVITY -->
+  <div class="sh">Recent Activity</div>
+  <div class="lg" id="workoutList">
+    <div class="wo-item">
+      <div class="wo-icon" style="background:rgba(0,122,255,0.12)">🏃</div>
+      <div><div class="wo-name">Morning Run</div><div class="wo-sub">3.2 mi · 28 min · 310 cal</div></div>
+      <div class="wo-tag" style="background:rgba(0,122,255,0.12);color:#007AFF">Today</div>
+    </div>
+    <div class="wo-item">
+      <div class="wo-icon" style="background:rgba(52,199,89,0.12)">🏋️</div>
+      <div><div class="wo-name">Strength Training</div><div class="wo-sub">45 min · 280 cal</div></div>
+      <div class="wo-tag" style="background:var(--fill);color:var(--label2)">Yesterday</div>
+    </div>
+    <div class="wo-item">
+      <div class="wo-icon" style="background:rgba(175,82,222,0.12)">🧘</div>
+      <div><div class="wo-name">Yoga</div><div class="wo-sub">30 min · 120 cal</div></div>
+      <div class="wo-tag" style="background:var(--fill);color:var(--label2)">2 days ago</div>
+    </div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- LOG TODAY -->
+  <div class="sh">Log Today</div>
+  <div class="lg">
+    <div class="log-row"><label for="logWeight">Weight</label><input class="log-in" type="number" id="logWeight" placeholder="lbs" step="0.1"/></div>
+    <div class="log-row"><label for="logCalories">Calories</label><input class="log-in" type="number" id="logCalories" placeholder="kcal"/></div>
+    <div class="log-row"><label for="logProtein">Protein</label><input class="log-in" type="number" id="logProtein" placeholder="g"/></div>
+    <div class="log-row"><label for="logSteps">Steps</label><input class="log-in" type="number" id="logSteps" placeholder="steps"/></div>
+    <div class="log-row"><label for="logWater">Water</label><input class="log-in" type="number" id="logWater" placeholder="glasses"/></div>
+    <div class="log-row"><label for="logWorkout">Workout</label><input class="log-in" type="text" id="logWorkout" placeholder="e.g. Run 3 mi"/></div>
+  </div>
+  <button class="btn-blue" onclick="logData()">Save Entry</button>
+
+  <div class="gap-lg"></div>
+
+  <!-- STREAK -->
+  <div class="sh">Logging Streak</div>
+  <div class="lg">
+    <div class="streak-wrap">
+      <div class="streak-grid" id="streakGrid"></div>
+      <div class="streak-foot">
+        <span>🔥 <b>12 days</b></span>
+        <span>Best: <b>18 days</b></span>
+        <span>Month: <b>16/19</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:24px"></div>
 </main>
+
+<nav class="tab-bar">
+  <a href="index.html" class="tab on">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
+    Summary
+  </a>
+  <a href="goals.html" class="tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
+    Goals
+  </a>
+  <a href="trends.html" class="tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Trends
+  </a>
+</nav>
 
 <div id="toast"></div>
 
 <script>
-  // DATE + GREETING
-  const now = new Date();
-  const hour = now.getHours();
-  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('greeting').textContent = `${greet}, Nishant.`;
-  document.getElementById('dateStr').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  // Large title collapse
+  const obs = new IntersectionObserver(([e]) => {
+    document.getElementById('navTitle').classList.toggle('show', !e.isIntersecting);
+  }, { threshold: 0, rootMargin: '-44px 0px 0px 0px' });
+  obs.observe(document.getElementById('ltWrap'));
 
-  // LOAD GOALS
-  let goals = {};
-  const savedGoals = localStorage.getItem('healthGoals');
-  if (savedGoals) {
-    goals = JSON.parse(savedGoals);
-    applyGoals();
+  // Date & greeting
+  const now = new Date();
+  const h = now.getHours();
+  document.getElementById('greeting').textContent =
+    (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', Nishant.';
+  document.getElementById('dateStr').textContent =
+    now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+  // Rings
+  function setRing(id, pct, r) {
+    const c = 2 * Math.PI * r;
+    const f = c * Math.min(Math.max(pct, 0), 1);
+    document.getElementById(id).setAttribute('stroke-dasharray', `${f} ${c}`);
   }
+  setRing('rSteps', 0.72, 50);
+  setRing('rCal',   0.85, 37);
+  setRing('rEx',    0.60, 24);
+
+  // Goals
+  let goals = {};
+  const sg = localStorage.getItem('healthGoals');
+  if (sg) { goals = JSON.parse(sg); applyGoals(); }
 
   function applyGoals() {
-    // Goal banner
     if (goals.targetWeight && goals.currentWeight) {
       const cw = parseFloat(goals.currentWeight);
       const tw = parseFloat(goals.targetWeight);
-      const current = 182; // would come from Apple Health
-      const toLose = (current - tw).toFixed(1);
-      const totalLoss = cw - tw;
-      const achieved = cw - current;
-      const pct = Math.round((achieved / totalLoss) * 100);
+      const cur = parseFloat(document.getElementById('weightVal').textContent) || 182;
       const weeks = parseInt(goals.timeframe) || 12;
-
-      document.getElementById('bannerTitle').textContent = `Goal: ${tw} lbs by ${getGoalDate(weeks)}`;
+      const toLose = (cur - tw).toFixed(1);
+      const pct = Math.max(0, Math.round(((cw - cur) / (cw - tw)) * 100));
+      document.getElementById('bannerTitle').textContent = `Goal: ${tw} lbs by ${goalDate(weeks)}`;
       document.getElementById('bannerSub').textContent = `${toLose} lbs remaining · ${weeks} weeks left`;
       document.getElementById('bannerStats').style.display = 'flex';
       document.getElementById('bannerToLose').textContent = toLose;
       document.getElementById('bannerWeeks').textContent = weeks;
-      document.getElementById('bannerPct').textContent = Math.max(0, pct) + '%';
+      document.getElementById('bannerPct').textContent = pct + '%';
       document.getElementById('bannerCta').textContent = 'Edit Goals →';
-
-      // Update weight card
-      document.getElementById('weightGoalLabel').textContent = `Goal: ${tw} lbs`;
-      const wPct = Math.round(((cw - current) / (cw - tw)) * 100);
-      document.getElementById('weightPct').textContent = Math.max(0, wPct) + '%';
-      document.getElementById('weightBar').style.width = Math.max(0, wPct) + '%';
+      document.getElementById('weightBar').style.width = pct + '%';
     }
-
-    if (goals.stepGoal) {
-      document.getElementById('stepsGoalLabel').textContent = `Goal: ${parseInt(goals.stepGoal).toLocaleString()}`;
-    }
-
-    if (goals.waterGoal) {
-      document.getElementById('waterGoalDisplay').textContent = goals.waterGoal;
-    }
+    if (goals.waterGoal) document.getElementById('waterGoalDisplay').textContent = goals.waterGoal;
   }
 
-  function getGoalDate(weeks) {
-    const d = new Date();
-    d.setDate(d.getDate() + weeks * 7);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  function goalDate(weeks) {
+    const d = new Date(); d.setDate(d.getDate() + weeks * 7);
+    return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
   }
 
-  // SPARKLINE
-  const weights = [184.2, 183.8, 183.5, 183.1, 182.8, 182.3, 182.0];
+  // Sparkline
   (function() {
+    const vals = [184.2, 183.8, 183.5, 183.1, 182.8, 182.3, 182.0];
     const svg = document.getElementById('sparkSvg');
     const W = 300, H = 60;
-    const min = Math.min(...weights) - 0.3, max = Math.max(...weights) + 0.3;
-    const xs = weights.map((_, i) => (i / (weights.length - 1)) * W);
-    const ys = weights.map(v => H - ((v - min) / (max - min)) * H);
-    const line = xs.map((x, i) => `${i ? 'L' : 'M'}${x},${ys[i]}`).join(' ');
-    const area = line + ` L${W},${H} L0,${H} Z`;
-    svg.innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity="0.15"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#sg)"/><path d="${line}" fill="none" stroke="#0071e3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="${i===weights.length-1?4:2.5}" fill="${i===weights.length-1?'#0071e3':'white'}" stroke="#0071e3" stroke-width="1.5"/>`).join('')}`;
+    const mn = Math.min(...vals) - 0.3, mx = Math.max(...vals) + 0.3;
+    const xs = vals.map((_,i) => (i/(vals.length-1))*W);
+    const ys = vals.map(v => H - ((v-mn)/(mx-mn))*H);
+    const ln = xs.map((x,i) => `${i?'L':'M'}${x},${ys[i]}`).join(' ');
+    svg.innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#007AFF" stop-opacity="0.18"/><stop offset="100%" stop-color="#007AFF" stop-opacity="0"/></linearGradient></defs><path d="${ln} L${W},${H} L0,${H} Z" fill="url(#sg)"/><path d="${ln}" fill="none" stroke="#007AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="${i===vals.length-1?4:2.5}" fill="${i===vals.length-1?'#007AFF':'white'}" stroke="#007AFF" stroke-width="1.5"/>`).join('')}`;
   })();
 
-  // STREAK
+  // Streak
   (function() {
     const days = ['S','M','T','W','T','F','S'];
     const data = [1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0];
     document.getElementById('streakGrid').innerHTML = data.map((v,i) => {
-      const isToday = i === data.length - 1;
-      return `<div class="streak-day${isToday?' today':v?' logged':''}">${days[i%7]}</div>`;
+      const t = i === data.length - 1;
+      return `<div class="sd${t?' now':v?' on':''}">${days[i%7]}</div>`;
     }).join('');
   })();
 
-  // LOG
+  // Log
   function logData() {
-    const get = id => document.getElementById(id).value;
-    if (get('logWeight'))   document.getElementById('weightVal').textContent = parseFloat(get('logWeight')).toFixed(1);
-    if (get('logCalories')) document.getElementById('calVal').textContent = parseInt(get('logCalories')).toLocaleString();
-    if (get('logSteps'))    document.getElementById('stepsVal').textContent = parseInt(get('logSteps')).toLocaleString();
-    if (get('logWater'))    document.getElementById('waterVal').textContent = get('logWater');
-    if (get('logWorkout')) {
-      const row = document.createElement('div');
-      row.className = 'workout-row';
-      row.innerHTML = `<div class="workout-left"><div class="workout-icon" style="background:var(--blue-light)">💪</div><div><div class="workout-name">${get('logWorkout')}</div><div class="workout-sub">Just logged</div></div></div><div class="workout-tag" style="background:var(--blue-light);color:#004fa3">Today</div>`;
-      document.getElementById('workoutList').prepend(row);
+    const g = id => document.getElementById(id).value;
+    if (g('logWeight'))   document.getElementById('weightVal').textContent = parseFloat(g('logWeight')).toFixed(1);
+    if (g('logCalories')) document.getElementById('calVal').textContent = parseInt(g('logCalories')).toLocaleString();
+    if (g('logSteps'))    document.getElementById('stepsVal').textContent = parseInt(g('logSteps')).toLocaleString();
+    if (g('logWater'))    document.getElementById('waterVal').textContent = g('logWater');
+    if (g('logWorkout')) {
+      const el = document.createElement('div'); el.className = 'wo-item';
+      el.innerHTML = `<div class="wo-icon" style="background:rgba(0,122,255,0.12)">💪</div><div><div class="wo-name">${g('logWorkout')}</div><div class="wo-sub">Just logged</div></div><div class="wo-tag" style="background:rgba(0,122,255,0.12);color:#007AFF">Now</div>`;
+      document.getElementById('workoutList').prepend(el);
     }
     ['logWeight','logCalories','logProtein','logSteps','logWater','logWorkout'].forEach(id => document.getElementById(id).value = '');
     showToast('Entry saved');
-    setTimeout(loadInsights, 500);
+    setTimeout(loadInsights, 400);
   }
 
-  // AI INSIGHTS
+  // Insights
   async function loadInsights() {
-    const list = document.getElementById('insightsList');
-    list.innerHTML = '<div class="insight-loading"><div class="spinner"></div> Analyzing your data...</div>';
-
-    const context = buildContext();
-
+    const el = document.getElementById('insightsList');
+    el.innerHTML = '<div class="insight-loading"><div class="spinner"></div> Analyzing your data…</div>';
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are a personal health and nutrition coach. Analyze the user's health data and goals, then provide 3-4 specific, actionable insights. Be encouraging but honest. Format each insight as a JSON array with objects containing "icon" (single emoji) and "text" (1-2 sentences). Return ONLY valid JSON array, no other text.`,
-          messages: [{ role: 'user', content: context }]
-        })
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800,
+          system: 'Health coach. Give 3-4 insights as JSON array with {icon, text}. Return ONLY valid JSON.',
+          messages: [{ role: 'user', content: buildCtx() }] })
       });
-
-      const data = await response.json();
-      const text = data.content.find(b => b.type === 'text')?.text || '[]';
-      const clean = text.replace(/```json|```/g, '').trim();
-      const insights = JSON.parse(clean);
-
-      list.innerHTML = insights.map(i => `
-        <div class="insight-item">
-          <div class="insight-icon">${i.icon}</div>
-          <div>${i.text}</div>
-        </div>
-      `).join('');
-    } catch (e) {
-      list.innerHTML = `
-        <div class="insight-item"><div class="insight-icon">⚖️</div><div>You're down 1.2 lbs this week — right on track for your goal. Keep it up!</div></div>
-        <div class="insight-item"><div class="insight-icon">🍗</div><div>Protein is at 142g today. Try adding a Greek yogurt or protein shake to hit your 165g target.</div></div>
-        <div class="insight-item"><div class="insight-icon">👟</div><div>2,760 steps to go. A 25-minute walk after dinner will get you there and boost your metabolism.</div></div>
-      `;
+      const d = await res.json();
+      const txt = d.content.find(b => b.type==='text')?.text || '[]';
+      const ins = JSON.parse(txt.replace(/```json|```/g,'').trim());
+      el.innerHTML = ins.map(i => `<div class="insight-item"><span style="font-size:20px">${i.icon}</span><div>${i.text}</div></div>`).join('');
+    } catch {
+      el.innerHTML = `<div class="insight-item"><span style="font-size:20px">⚖️</span><div>You're down 1.2 lbs this week — right on track for your goal.</div></div><div class="insight-item"><span style="font-size:20px">🍗</span><div>Protein at 142g — add a Greek yogurt to hit your 165g target.</div></div><div class="insight-item"><span style="font-size:20px">👟</span><div>2,760 steps to go. A 25-minute walk after dinner will get you there.</div></div>`;
     }
   }
 
-  // CHAT
-  let chatHistory = [];
-
-  function buildContext() {
-    const g = goals;
-    return `User health data:
-- Current weight: 182 lbs
-- Target weight: ${g.targetWeight || '170'} lbs
-- Starting weight: ${g.currentWeight || '184'} lbs
-- Timeframe: ${g.timeframe || '12'} weeks
-- Today's calories: 1,840 kcal (target: 2,000)
-- Protein: 142g / 165g target
-- Steps: 7,240 / ${g.stepGoal || '10,000'} goal
-- Water: 6 / ${g.waterGoal || '8'} glasses
-- Weight trend (7 days): 184.2 → 183.8 → 183.5 → 183.1 → 182.8 → 182.3 → 182.0 lbs
-- Today's workout: Morning Run (3.2 mi, 310 cal burned)
-- Age: ${g.age || 'not set'}, Gender: ${g.gender || 'not set'}
-- Activity level: ${g.activity || 'moderate'}`;
+  // Chat
+  let chatHist = [];
+  function buildCtx() {
+    const g = goals, d = healthData || {};
+    const sh = historyData.map(h=>h.steps).filter(s=>s>0).slice(0,7).reverse();
+    return `Health data: weight ${d.weight||'—'} lbs (goal ${g.targetWeight||'—'}), steps ${d.steps||0}/${g.stepGoal||10000}, active cal ${d.activeEnergy||0}, distance ${d.distance||0} mi, exercise ${d.exerciseTime||0} min, HR ${d.restingHeartRate||'—'} bpm, HRV ${d.hrv||'—'} ms, sleep ${d.sleepTotal||'—'} hrs, step trend: ${sh.join('→')||'N/A'}, age ${g.age||'—'}, ${g.activity||'moderate'} activity`;
   }
 
   async function sendChat() {
-    const input = document.getElementById('chatInput');
-    const msg = input.value.trim();
-    if (!msg) return;
-    input.value = '';
-    appendMsg('user', msg);
-
-    const loading = appendMsg('assistant', '...', true);
-
-    chatHistory.push({ role: 'user', content: msg });
-
+    const inp = document.getElementById('chatInput');
+    const msg = inp.value.trim(); if (!msg) return;
+    inp.value = ''; appendMsg('user', msg);
+    const ld = appendMsg('bot', '', true);
+    chatHist.push({ role:'user', content:msg });
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are a personal health and nutrition coach assistant. You have access to the user's health data and goals. Be specific, encouraging, and concise (2-4 sentences max). Reference their actual numbers when relevant.\n\n${buildContext()}`,
-          messages: chatHistory
-        })
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:600,
+          system:`Personal health coach. Concise (2-3 sentences), specific, encouraging.\n\n${buildCtx()}`,
+          messages: chatHist })
       });
-
-      const data = await response.json();
-      const reply = data.content.find(b => b.type === 'text')?.text || "I couldn't process that. Please try again.";
-      loading.remove();
-      appendMsg('assistant', reply);
-      chatHistory.push({ role: 'assistant', content: reply });
-    } catch (e) {
-      loading.remove();
-      appendMsg('assistant', "I'm having trouble connecting. Please check your internet and try again.");
-    }
+      const d = await res.json();
+      const reply = d.content.find(b=>b.type==='text')?.text || "Couldn't process that.";
+      ld.remove(); appendMsg('bot', reply);
+      chatHist.push({ role:'assistant', content:reply });
+    } catch { ld.remove(); appendMsg('bot', 'Connection issue. Please try again.'); }
   }
 
-  function sendQuick(msg) {
-    document.getElementById('chatInput').value = msg;
-    sendChat();
-  }
+  function sendQuick(m) { document.getElementById('chatInput').value = m; sendChat(); }
 
-  function appendMsg(role, text, isLoading = false) {
-    const msgs = document.getElementById('chatMessages');
-    const div = document.createElement('div');
-    div.className = `msg ${role}${isLoading ? ' loading' : ''}`;
-    if (isLoading) {
-      div.innerHTML = '<div class="spinner"></div> Thinking...';
-    } else {
-      div.textContent = text;
-    }
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-    return div;
+  function appendMsg(role, text, loading=false) {
+    const el = document.getElementById('chatMessages');
+    const d = document.createElement('div');
+    d.className = `msg ${role}${loading?' loading':''}`;
+    if (loading) d.innerHTML = '<div class="spinner"></div>';
+    else d.textContent = text;
+    el.appendChild(d); el.scrollTop = el.scrollHeight; return d;
   }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = '✓  ' + msg;
-    t.classList.add('show');
+    t.textContent = '✓ ' + msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
   }
 
-  // LOAD REAL APPLE HEALTH DATA
-  let healthData = null;
-  let historyData = [];
+  // Apple Health data
+  let healthData = null, historyData = [];
 
   async function loadHealthData() {
     try {
       const res = await fetch('/api/health');
       const json = await res.json();
       if (json.success && json.data.today) {
-        healthData = json.data.today;
-        historyData = json.data.history || [];
-        applyHealthData();
-        drawSparklineFromHistory();
-        loadInsights();
-      } else {
-        loadInsights();
-      }
-    } catch (e) {
-      console.warn('Could not load health data:', e);
-      loadInsights();
-    }
+        healthData = json.data.today; historyData = json.data.history || [];
+        applyHealth(); drawHistorySpark(); loadInsights();
+      } else loadInsights();
+    } catch { loadInsights(); }
   }
 
-  function applyHealthData() {
-    if (!healthData) return;
-    const d = healthData;
-
-    if (d.steps) {
-      document.getElementById('stepsVal').textContent = d.steps.toLocaleString();
-      const stepGoal = parseInt(goals.stepGoal) || 10000;
-      const stepPct = Math.min(Math.round((d.steps / stepGoal) * 100), 100);
-      document.getElementById('stepsPct').textContent = stepPct + '%';
-      document.getElementById('stepsBar').style.width = stepPct + '%';
-      const remaining = Math.max(stepGoal - d.steps, 0);
-      document.getElementById('stepsDelta').textContent = remaining > 0 ? remaining.toLocaleString() + ' to goal' : '✓ Goal reached!';
-      document.getElementById('stepsDelta').className = 'metric-delta ' + (remaining === 0 ? 'delta-green' : 'delta-gray');
-    }
-
-    if (d.activeEnergy) {
-      document.getElementById('calVal').textContent = Math.round(d.activeEnergy).toLocaleString();
-    }
-
-    if (d.weight) {
-      document.getElementById('weightVal').textContent = d.weight.toFixed(1);
-    }
-
+  function applyHealth() {
+    const d = healthData; if (!d) return;
+    const stepGoal = parseInt(goals.stepGoal) || 10000;
+    if (d.steps)        { document.getElementById('stepsVal').textContent = d.steps.toLocaleString(); setRing('rSteps', d.steps/stepGoal, 50); }
+    if (d.activeEnergy) { document.getElementById('calVal').textContent = Math.round(d.activeEnergy).toLocaleString(); setRing('rCal', d.activeEnergy/500, 37); }
+    if (d.exerciseTime) { document.getElementById('exerciseVal').textContent = Math.round(d.exerciseTime); setRing('rEx', d.exerciseTime/30, 24); }
+    if (d.weight)       { document.getElementById('weightVal').textContent = d.weight.toFixed(1); }
+    if (d.distance)     document.getElementById('distVal').textContent = d.distance.toFixed(1);
+    if (d.heartRateAvg||d.restingHeartRate) document.getElementById('hrVal').textContent = Math.round(d.heartRateAvg||d.restingHeartRate);
+    if (d.hrv)          document.getElementById('hrvVal').textContent = Math.round(d.hrv);
+    if (d.sleepTotal)   document.getElementById('sleepVal').textContent = d.sleepTotal.toFixed(1);
     if (d.water) {
-      const glasses = Math.round(d.water / 8);
-      const waterGoal = parseInt(goals.waterGoal) || 8;
-      document.getElementById('waterVal').textContent = glasses;
-      document.getElementById('waterGoalDisplay').textContent = waterGoal;
-      const waterPct = Math.min(Math.round((glasses / waterGoal) * 100), 100);
-      document.getElementById('waterPct').textContent = waterPct + '%';
-      document.getElementById('waterBar').style.width = waterPct + '%';
+      const gl = Math.round(d.water/8), wg = parseInt(goals.waterGoal)||8;
+      document.getElementById('waterVal').textContent = gl;
+      document.getElementById('waterBar').style.width = Math.min(gl/wg,1)*100+'%';
     }
+    applyGoals();
   }
 
-  function drawSparklineFromHistory() {
-    const stepData = historyData.filter(d => d.steps > 0).slice(0, 7).reverse();
-    if (stepData.length < 2) return;
+  function drawHistorySpark() {
+    const sd = historyData.filter(d=>d.steps>0).slice(0,7).reverse();
+    if (sd.length < 2) return;
+    const vals = sd.map(d=>d.steps);
     const svg = document.getElementById('sparkSvg');
-    const W = 300, H = 60;
-    const values = stepData.map(d => d.steps);
-    const min = Math.min(...values) * 0.9;
-    const max = Math.max(...values) * 1.1;
-    const xs = values.map((_, i) => (i / (values.length - 1)) * W);
-    const ys = values.map(v => H - ((v - min) / (max - min)) * H);
-    const line = xs.map((x, i) => (i ? 'L' : 'M') + x + ',' + ys[i]).join(' ');
-    const area = line + ' L' + W + ',' + H + ' L0,' + H + ' Z';
-    svg.innerHTML = '<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity="0.15"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0"/></linearGradient></defs><path d="' + area + '" fill="url(#sg)"/><path d="' + line + '" fill="none" stroke="#0071e3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' + xs.map((x,i) => '<circle cx="' + x + '" cy="' + ys[i] + '" r="' + (i===values.length-1?4:2.5) + '" fill="' + (i===values.length-1?'#0071e3':'white') + '" stroke="#0071e3" stroke-width="1.5"/>').join('');
-    document.querySelector('.spark-footer').innerHTML = '<span>7 days ago: <b>' + stepData[0].steps.toLocaleString() + ' steps</b></span><span>Today: <b style="color:var(--blue)">' + stepData[stepData.length-1].steps.toLocaleString() + ' steps</b></span>';
-  }
-
-  // 2. Update buildContext to use real data
-  function buildContext() {
-    const g = goals;
-    const d = healthData || {};
-    const stepHistory = historyData.map(h => h.steps).filter(s => s > 0).slice(0, 7).reverse();
-    return 'User health data:\n' +
-      '- Current weight: ' + (d.weight || 'not logged') + ' lbs\n' +
-      '- Target weight: ' + (g.targetWeight || 'not set') + ' lbs\n' +
-      '- Starting weight: ' + (g.currentWeight || 'not set') + ' lbs\n' +
-      '- Timeframe: ' + (g.timeframe || '12') + ' weeks\n' +
-      '- Active calories burned today: ' + (d.activeEnergy || 0) + ' kcal\n' +
-      '- Steps today: ' + (d.steps || 0) + ' / ' + (g.stepGoal || 10000) + ' goal\n' +
-      '- Distance today: ' + (d.distance || 0) + ' miles\n' +
-      '- Exercise time today: ' + (d.exerciseTime || 0) + ' min\n' +
-      '- Stand hours: ' + (d.standHours || 0) + '\n' +
-      '- Resting heart rate: ' + (d.restingHeartRate || 'not logged') + ' bpm\n' +
-      '- HRV: ' + (d.hrv || 'not logged') + ' ms\n' +
-      '- Blood oxygen: ' + (d.bloodOxygen || 'not logged') + '%\n' +
-      '- Sleep last night: ' + (d.sleepTotal || 'not logged') + ' hrs\n' +
-      '- Step trend (7 days): ' + (stepHistory.join(' → ') || 'not available') + '\n' +
-      '- Age: ' + (g.age || 'not set') + ', Gender: ' + (g.gender || 'not set') + '\n' +
-      '- Activity level: ' + (g.activity || 'moderate') + '\n' +
-      'Note: Nutrition data (calories in, protein, carbs, fat) not yet connected - user logs manually.';
+    const W=300,H=60,mn=Math.min(...vals)*0.9,mx=Math.max(...vals)*1.1;
+    const xs=vals.map((_,i)=>(i/(vals.length-1))*W);
+    const ys=vals.map(v=>H-((v-mn)/(mx-mn))*H);
+    const ln=xs.map((x,i)=>`${i?'L':'M'}${x},${ys[i]}`).join(' ');
+    svg.innerHTML=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#007AFF" stop-opacity="0.18"/><stop offset="100%" stop-color="#007AFF" stop-opacity="0"/></linearGradient></defs><path d="${ln} L${W},${H} L0,${H} Z" fill="url(#sg)"/><path d="${ln}" fill="none" stroke="#007AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="${i===vals.length-1?4:2.5}" fill="${i===vals.length-1?'#007AFF':'white'}" stroke="#007AFF" stroke-width="1.5"/>`).join('')}`;
+    document.querySelector('.spark-foot').innerHTML=`<span>7 days ago: <b>${sd[0].steps.toLocaleString()} steps</b></span><span>Today: <b style="color:#007AFF">${sd[sd.length-1].steps.toLocaleString()} steps</b></span>`;
   }
 
   async function syncData() {
     const btn = document.getElementById('syncBtn');
-    const icon = document.getElementById('syncIcon');
-    const label = document.getElementById('syncLabel');
-
-    icon.style.animation = 'spin 0.8s linear infinite';
-    label.textContent = 'Syncing...';
-    btn.style.pointerEvents = 'none';
-
+    document.getElementById('syncSvg').style.animation = 'spin 0.8s linear infinite';
+    btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
     await loadHealthData();
-
-    icon.style.animation = '';
-    label.textContent = 'Synced ✓';
-    btn.style.color = 'var(--green)';
-    btn.style.borderColor = 'var(--green)';
-
-    setTimeout(() => {
-      label.textContent = 'Sync';
-      btn.style.color = '';
-      btn.style.borderColor = '';
-      btn.style.pointerEvents = '';
-    }, 2500);
+    document.getElementById('syncSvg').style.animation = '';
+    btn.style.opacity = '1'; btn.style.pointerEvents = '';
+    showToast('Synced');
   }
 
-  // Load health data first, which then triggers insights
   loadHealthData();
 </script>
 </body>
 </html>
-test

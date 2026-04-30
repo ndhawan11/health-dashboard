@@ -2,458 +2,333 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Trends — Health Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Trends — Health</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f5f5f7;
-      --surface: #ffffff;
-      --surface2: #f5f5f7;
-      --border: rgba(0,0,0,0.08);
-      --text: #1d1d1f;
-      --text2: #6e6e73;
-      --text3: #a1a1a6;
-      --blue: #0071e3;
-      --blue-light: #e8f1fb;
-      --green: #30d158;
-      --green-light: #e4f8eb;
-      --orange: #ff9f0a;
-      --orange-light: #fff4e0;
-      --purple: #bf5af2;
-      --purple-light: #f5ebfe;
-      --red: #ff453a;
-      --red-light: #ffeceb;
-      --teal: #32ade6;
-      --teal-light: #e5f4fd;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --radius: 18px;
-      --radius-sm: 12px;
+      --bg: #F2F2F7; --surface: #FFFFFF;
+      --fill: rgba(118,118,128,0.12); --sep: rgba(60,60,67,0.36);
+      --label: #000; --label2: rgba(60,60,67,0.6); --label3: rgba(60,60,67,0.3);
+      --blue: #007AFF; --green: #34C759; --orange: #FF9500;
+      --red: #FF3B30; --purple: #AF52DE; --teal: #5AC8FA;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 14px;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
+      background: var(--bg); color: var(--label);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      font-size: 17px; -webkit-font-smoothing: antialiased; padding-bottom: 83px;
     }
 
-    nav {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* NAV */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100; height: 44px;
+      background: rgba(242,242,247,0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 0.5px solid var(--sep);
+      display: flex; align-items: center; justify-content: center; padding: 0 16px;
     }
-
-    .nav-logo { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; text-decoration: none; }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { color: var(--text2); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-links a.active { color: var(--blue); font-weight: 500; }
-    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #0071e3, #30d158); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; }
-
-    main { max-width: 1080px; margin: 0 auto; padding: 40px 32px; }
-
-    .page-header { margin-bottom: 32px; animation: fadeUp 0.4s ease both; }
-    .page-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
-    .page-header .meta { color: var(--text2); font-size: 14px; margin-top: 4px; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .nav-title { font-size: 17px; font-weight: 600; letter-spacing: -0.41px; opacity: 0; transition: opacity 0.2s; position: absolute; }
+    .nav-title.show { opacity: 1; }
+    .nav-right { position: absolute; right: 16px; }
+    .nav-btn {
+      background: none; border: none; color: var(--blue);
+      font-size: 17px; cursor: pointer; padding: 4px;
+      display: flex; align-items: center;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* SUMMARY BAR */
-    .summary-bar {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
-      margin-bottom: 28px;
-      animation: fadeUp 0.4s ease 0.05s both;
+    /* LARGE TITLE */
+    .lt-wrap { padding: 8px 16px 4px; }
+    .lt { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
+    .lt-sub { font-size: 13px; color: var(--label2); margin-top: 3px; }
+
+    main { max-width: 680px; margin: 0 auto; }
+    .gap { height: 10px; }
+    .gap-lg { height: 18px; }
+    .sh { font-size: 13px; color: var(--label2); text-transform: uppercase; letter-spacing: 0.06em; padding: 18px 32px 6px; }
+
+    /* SUMMARY STRIP */
+    .summary-strip {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px; margin: 0 16px;
     }
-
-    .summary-stat {
-      background: var(--surface);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      box-shadow: var(--shadow-sm);
-      text-align: center;
+    .ss-item {
+      background: var(--surface); border-radius: 10px;
+      padding: 12px 10px; text-align: center;
     }
+    .ss-icon { font-size: 16px; margin-bottom: 4px; }
+    .ss-val { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; line-height: 1; }
+    .ss-unit { font-size: 11px; color: var(--label2); margin-top: 1px; }
+    .ss-lbl { font-size: 10px; font-weight: 500; color: var(--label3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 3px; }
 
-    .summary-stat .s-icon { font-size: 18px; margin-bottom: 6px; }
-    .summary-stat .s-val { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
-    .summary-stat .s-unit { font-size: 11px; color: var(--text2); margin-top: 2px; }
-    .summary-stat .s-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
-
-    /* CHART GRID */
-    .chart-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
+    /* CHART CARD */
     .chart-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow-sm);
-      animation: fadeUp 0.5s ease both;
-      display: flex;
-      flex-direction: column;
+      background: var(--surface); border-radius: 10px;
+      margin: 0 16px; overflow: hidden;
     }
-
-    .chart-card:nth-child(1) { animation-delay: 0.06s; }
-    .chart-card:nth-child(2) { animation-delay: 0.10s; }
-    .chart-card:nth-child(3) { animation-delay: 0.14s; }
-    .chart-card:nth-child(4) { animation-delay: 0.18s; }
-    .chart-card:nth-child(5) { animation-delay: 0.22s; }
-    .chart-card:nth-child(6) { animation-delay: 0.26s; }
-
-    .chart-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 14px;
+    .cc-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 14px 16px 0;
     }
-
-    .chart-card-left { display: flex; align-items: center; gap: 10px; }
-
-    .metric-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
+    .cc-left { display: flex; align-items: center; gap: 10px; }
+    .cc-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
     }
-
-    .metric-info {}
-    .metric-label { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; }
-    .metric-value-row { display: flex; align-items: baseline; gap: 3px; margin-top: 2px; }
-    .metric-value { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1; }
-    .metric-unit { font-size: 13px; color: var(--text2); font-weight: 400; }
-
-    .metric-delta {
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 8px;
-      border-radius: 20px;
-      white-space: nowrap;
-      align-self: flex-start;
-      margin-top: 2px;
+    .cc-label { font-size: 12px; color: var(--label2); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500; }
+    .cc-val { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1.1; margin-top: 1px; }
+    .cc-unit { font-size: 13px; color: var(--label2); font-weight: 400; }
+    .cc-delta {
+      font-size: 12px; font-weight: 600; padding: 4px 9px;
+      border-radius: 20px; white-space: nowrap; align-self: flex-start;
+      margin-top: 4px;
     }
+    .d-up   { background: rgba(52,199,89,0.12);  color: #1a7a35; }
+    .d-down { background: rgba(255,59,48,0.12);  color: #c0392b; }
+    .d-neu  { background: var(--fill);            color: var(--label2); }
 
-    .delta-green  { background: var(--green-light);  color: #1a7a35; }
-    .delta-red    { background: var(--red-light);    color: #c0392b; }
-    .delta-gray   { background: var(--surface2);     color: var(--text2); }
-    .delta-blue   { background: var(--blue-light);   color: #004fa3; }
-    .delta-purple { background: var(--purple-light); color: #6a00b8; }
+    .chart-wrap { height: 110px; padding: 8px 16px 0; position: relative; }
+    .chart-wrap canvas { display: block; }
 
-    .chart-wrap {
-      position: relative;
-      height: 120px;
-      margin: 4px 0 12px;
-      flex: 1;
+    .cc-footer {
+      display: flex; justify-content: space-around;
+      border-top: 0.5px solid var(--sep); margin: 10px 16px 0; padding: 10px 0 14px;
     }
-
-    .chart-wrap canvas { border-radius: 8px; }
-
-    .chart-footer {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
-      margin-top: auto;
-    }
-
-    .stat-item { text-align: center; }
-    .stat-val { font-size: 13px; font-weight: 600; color: var(--text); }
-    .stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
-
-    /* LOADING STATE */
-    .loading-overlay {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 120px;
-      gap: 8px;
-      color: var(--text2);
-      font-size: 13px;
-    }
-
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid var(--border);
-      border-top-color: var(--blue);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      flex-shrink: 0;
-    }
-
-    /* DATE RANGE PILL */
-    .date-range {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface2);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text2);
-      margin-bottom: 24px;
-    }
-
-    .date-range span { color: var(--text); }
+    .cf-item { text-align: center; }
+    .cf-val { font-size: 13px; font-weight: 600; }
+    .cf-lbl { font-size: 10px; color: var(--label3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
 
     /* TOAST */
     #toast {
-      position: fixed; bottom: 32px; left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(29,29,31,0.92); backdrop-filter: blur(20px);
-      color: white; font-size: 13px; font-weight: 500;
-      padding: 12px 20px; border-radius: 20px;
-      opacity: 0; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: fixed; bottom: 96px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+      color: white; font-size: 14px; font-weight: 500;
+      padding: 11px 18px; border-radius: 20px;
+      opacity: 0; transition: all 0.25s ease;
       pointer-events: none; white-space: nowrap;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    @media (max-width: 860px) {
-      main { padding: 24px 16px; }
-      .summary-bar { grid-template-columns: repeat(3, 1fr); }
-      .chart-grid { grid-template-columns: 1fr; }
+    /* TAB BAR */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 83px; padding-bottom: 20px;
+      background: rgba(242,242,247,0.92);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-top: 0.5px solid var(--sep);
+      display: flex; z-index: 100;
     }
-
-    @media (max-width: 480px) {
-      .summary-bar { grid-template-columns: repeat(2, 1fr); }
+    .tab {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: flex-start; padding-top: 10px; gap: 3px;
+      text-decoration: none; color: var(--label2);
+      font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
     }
+    .tab.on { color: var(--blue); }
+    .tab svg { width: 25px; height: 25px; }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="nav-logo">Health</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Summary</a></li>
-    <li><a href="goals.html">Goals</a></li>
-    <li><a href="trends.html" class="active">Trends</a></li>
-  </ul>
-  <div style="display:flex;align-items:center;gap:12px">
-    <button onclick="refresh()" id="syncBtn" style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-family:inherit;font-size:12px;font-weight:500;color:var(--text2);padding:6px 14px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px">
-      <span id="syncIcon">↻</span> <span id="syncLabel">Refresh</span>
+<header class="nav-bar">
+  <span class="nav-title" id="navTitle">Trends</span>
+  <div class="nav-right">
+    <button class="nav-btn" id="refreshBtn" onclick="refresh()" title="Refresh">
+      <svg id="refreshSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
     </button>
-    <div class="avatar">ND</div>
   </div>
-</nav>
+</header>
+
+<div class="lt-wrap" id="ltWrap">
+  <h1 class="lt">Trends</h1>
+  <p class="lt-sub" id="ltSub">Loading 7-day Apple Health data…</p>
+</div>
 
 <main>
-  <div class="page-header">
-    <h1>Trends</h1>
-    <div class="meta" id="dateRangeMeta">Loading your 7-day Apple Health data…</div>
+  <div class="gap"></div>
+
+  <!-- SUMMARY STRIP -->
+  <div class="summary-strip">
+    <div class="ss-item"><div class="ss-icon">👟</div><div class="ss-val" id="s-steps">—</div><div class="ss-unit">avg steps</div><div class="ss-lbl">Daily</div></div>
+    <div class="ss-item"><div class="ss-icon">🔥</div><div class="ss-val" id="s-cal">—</div><div class="ss-unit">avg kcal</div><div class="ss-lbl">Active Cal</div></div>
+    <div class="ss-item"><div class="ss-icon">❤️</div><div class="ss-val" id="s-hr">—</div><div class="ss-unit">bpm avg</div><div class="ss-lbl">Heart Rate</div></div>
+    <div class="ss-item"><div class="ss-icon">💜</div><div class="ss-val" id="s-hrv">—</div><div class="ss-unit">ms avg</div><div class="ss-lbl">HRV</div></div>
+    <div class="ss-item"><div class="ss-icon">🌙</div><div class="ss-val" id="s-sleep">—</div><div class="ss-unit">hrs avg</div><div class="ss-lbl">Sleep</div></div>
+    <div class="ss-item"><div class="ss-icon">📍</div><div class="ss-val" id="s-dist">—</div><div class="ss-unit">mi avg</div><div class="ss-lbl">Distance</div></div>
   </div>
 
-  <!-- SUMMARY BAR -->
-  <div class="summary-bar" id="summaryBar">
-    <div class="summary-stat"><div class="s-icon">👟</div><div class="s-val" id="s-steps">—</div><div class="s-unit">avg / day</div><div class="s-label">Steps</div></div>
-    <div class="summary-stat"><div class="s-icon">🔥</div><div class="s-val" id="s-cal">—</div><div class="s-unit">avg / day</div><div class="s-label">Active Cal</div></div>
-    <div class="summary-stat"><div class="s-icon">❤️</div><div class="s-val" id="s-hr">—</div><div class="s-unit">bpm avg</div><div class="s-label">Heart Rate</div></div>
-    <div class="summary-stat"><div class="s-icon">💜</div><div class="s-val" id="s-hrv">—</div><div class="s-unit">ms avg</div><div class="s-label">HRV</div></div>
-    <div class="summary-stat"><div class="s-icon">🌙</div><div class="s-val" id="s-sleep">—</div><div class="s-unit">hrs avg</div><div class="s-label">Sleep</div></div>
-    <div class="summary-stat"><div class="s-icon">📍</div><div class="s-val" id="s-dist">—</div><div class="s-unit">mi avg / day</div><div class="s-label">Distance</div></div>
+  <div class="gap-lg"></div>
+
+  <!-- STEPS -->
+  <div class="sh">Movement</div>
+  <div class="chart-card">
+    <div class="cc-header">
+      <div class="cc-left">
+        <div class="cc-icon" style="background:rgba(52,199,89,0.12)">👟</div>
+        <div><div class="cc-label">Steps</div><div><span class="cc-val" id="v-steps">—</span></div></div>
+      </div>
+      <span class="cc-delta d-neu" id="d-steps">7 days</span>
+    </div>
+    <div class="chart-wrap"><canvas id="c-steps"></canvas></div>
+    <div class="cc-footer">
+      <div class="cf-item"><div class="cf-val" id="min-steps">—</div><div class="cf-lbl">Min</div></div>
+      <div class="cf-item"><div class="cf-val" id="avg-steps">—</div><div class="cf-lbl">Avg</div></div>
+      <div class="cf-item"><div class="cf-val" id="max-steps">—</div><div class="cf-lbl">Max</div></div>
+    </div>
   </div>
 
-  <!-- CHART GRID -->
-  <div class="chart-grid">
+  <div class="gap"></div>
 
-    <!-- STEPS -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div class="chart-card-left">
-          <div class="metric-icon" style="background:var(--green-light)">👟</div>
-          <div class="metric-info">
-            <div class="metric-label">Steps</div>
-            <div class="metric-value-row">
-              <span class="metric-value" id="v-steps">—</span>
-            </div>
-          </div>
-        </div>
-        <span class="metric-delta" id="d-steps">7 days</span>
+  <!-- DISTANCE -->
+  <div class="chart-card">
+    <div class="cc-header">
+      <div class="cc-left">
+        <div class="cc-icon" style="background:rgba(90,200,250,0.12)">📍</div>
+        <div><div class="cc-label">Distance</div><div><span class="cc-val" id="v-dist">—</span> <span class="cc-unit">mi</span></div></div>
       </div>
-      <div class="chart-wrap"><canvas id="c-steps"></canvas></div>
-      <div class="chart-footer">
-        <div class="stat-item"><div class="stat-val" id="min-steps">—</div><div class="stat-label">Min</div></div>
-        <div class="stat-item"><div class="stat-val" id="avg-steps">—</div><div class="stat-label">Avg</div></div>
-        <div class="stat-item"><div class="stat-val" id="max-steps">—</div><div class="stat-label">Max</div></div>
-      </div>
+      <span class="cc-delta d-neu" id="d-dist">7 days</span>
     </div>
-
-    <!-- ACTIVE CALORIES -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div class="chart-card-left">
-          <div class="metric-icon" style="background:var(--orange-light)">🔥</div>
-          <div class="metric-info">
-            <div class="metric-label">Active Calories</div>
-            <div class="metric-value-row">
-              <span class="metric-value" id="v-cal">—</span>
-              <span class="metric-unit">kcal</span>
-            </div>
-          </div>
-        </div>
-        <span class="metric-delta" id="d-cal">7 days</span>
-      </div>
-      <div class="chart-wrap"><canvas id="c-cal"></canvas></div>
-      <div class="chart-footer">
-        <div class="stat-item"><div class="stat-val" id="min-cal">—</div><div class="stat-label">Min</div></div>
-        <div class="stat-item"><div class="stat-val" id="avg-cal">—</div><div class="stat-label">Avg</div></div>
-        <div class="stat-item"><div class="stat-val" id="max-cal">—</div><div class="stat-label">Max</div></div>
-      </div>
+    <div class="chart-wrap"><canvas id="c-dist"></canvas></div>
+    <div class="cc-footer">
+      <div class="cf-item"><div class="cf-val" id="min-dist">—</div><div class="cf-lbl">Min</div></div>
+      <div class="cf-item"><div class="cf-val" id="avg-dist">—</div><div class="cf-lbl">Avg</div></div>
+      <div class="cf-item"><div class="cf-val" id="max-dist">—</div><div class="cf-lbl">Max</div></div>
     </div>
-
-    <!-- HEART RATE -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div class="chart-card-left">
-          <div class="metric-icon" style="background:var(--red-light)">❤️</div>
-          <div class="metric-info">
-            <div class="metric-label">Heart Rate</div>
-            <div class="metric-value-row">
-              <span class="metric-value" id="v-hr">—</span>
-              <span class="metric-unit">bpm</span>
-            </div>
-          </div>
-        </div>
-        <span class="metric-delta" id="d-hr">7 days</span>
-      </div>
-      <div class="chart-wrap"><canvas id="c-hr"></canvas></div>
-      <div class="chart-footer">
-        <div class="stat-item"><div class="stat-val" id="min-hr">—</div><div class="stat-label">Min</div></div>
-        <div class="stat-item"><div class="stat-val" id="avg-hr">—</div><div class="stat-label">Avg</div></div>
-        <div class="stat-item"><div class="stat-val" id="max-hr">—</div><div class="stat-label">Max</div></div>
-      </div>
-    </div>
-
-    <!-- HRV -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div class="chart-card-left">
-          <div class="metric-icon" style="background:var(--purple-light)">💜</div>
-          <div class="metric-info">
-            <div class="metric-label">HRV</div>
-            <div class="metric-value-row">
-              <span class="metric-value" id="v-hrv">—</span>
-              <span class="metric-unit">ms</span>
-            </div>
-          </div>
-        </div>
-        <span class="metric-delta" id="d-hrv">7 days</span>
-      </div>
-      <div class="chart-wrap"><canvas id="c-hrv"></canvas></div>
-      <div class="chart-footer">
-        <div class="stat-item"><div class="stat-val" id="min-hrv">—</div><div class="stat-label">Min</div></div>
-        <div class="stat-item"><div class="stat-val" id="avg-hrv">—</div><div class="stat-label">Avg</div></div>
-        <div class="stat-item"><div class="stat-val" id="max-hrv">—</div><div class="stat-label">Max</div></div>
-      </div>
-    </div>
-
-    <!-- SLEEP -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div class="chart-card-left">
-          <div class="metric-icon" style="background:var(--blue-light)">🌙</div>
-          <div class="metric-info">
-            <div class="metric-label">Sleep</div>
-            <div class="metric-value-row">
-              <span class="metric-value" id="v-sleep">—</span>
-              <span class="metric-unit">hrs</span>
-            </div>
-          </div>
-        </div>
-        <span class="metric-delta" id="d-sleep">7 days</span>
-      </div>
-      <div class="chart-wrap"><canvas id="c-sleep"></canvas></div>
-      <div class="chart-footer">
-        <div class="stat-item"><div class="stat-val" id="min-sleep">—</div><div class="stat-label">Min</div></div>
-        <div class="stat-item"><div class="stat-val" id="avg-sleep">—</div><div class="stat-label">Avg</div></div>
-        <div class="stat-item"><div class="stat-val" id="max-sleep">—</div><div class="stat-label">Max</div></div>
-      </div>
-    </div>
-
-    <!-- DISTANCE -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div class="chart-card-left">
-          <div class="metric-icon" style="background:var(--teal-light)">📍</div>
-          <div class="metric-info">
-            <div class="metric-label">Distance</div>
-            <div class="metric-value-row">
-              <span class="metric-value" id="v-dist">—</span>
-              <span class="metric-unit">mi</span>
-            </div>
-          </div>
-        </div>
-        <span class="metric-delta" id="d-dist">7 days</span>
-      </div>
-      <div class="chart-wrap"><canvas id="c-dist"></canvas></div>
-      <div class="chart-footer">
-        <div class="stat-item"><div class="stat-val" id="min-dist">—</div><div class="stat-label">Min</div></div>
-        <div class="stat-item"><div class="stat-val" id="avg-dist">—</div><div class="stat-label">Avg</div></div>
-        <div class="stat-item"><div class="stat-val" id="max-dist">—</div><div class="stat-label">Max</div></div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- ACTIVE CAL -->
+  <div class="sh">Energy</div>
+  <div class="chart-card">
+    <div class="cc-header">
+      <div class="cc-left">
+        <div class="cc-icon" style="background:rgba(255,149,0,0.12)">🔥</div>
+        <div><div class="cc-label">Active Calories</div><div><span class="cc-val" id="v-cal">—</span> <span class="cc-unit">kcal</span></div></div>
+      </div>
+      <span class="cc-delta d-neu" id="d-cal">7 days</span>
+    </div>
+    <div class="chart-wrap"><canvas id="c-cal"></canvas></div>
+    <div class="cc-footer">
+      <div class="cf-item"><div class="cf-val" id="min-cal">—</div><div class="cf-lbl">Min</div></div>
+      <div class="cf-item"><div class="cf-val" id="avg-cal">—</div><div class="cf-lbl">Avg</div></div>
+      <div class="cf-item"><div class="cf-val" id="max-cal">—</div><div class="cf-lbl">Max</div></div>
+    </div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- HEART -->
+  <div class="sh">Heart</div>
+  <div class="chart-card">
+    <div class="cc-header">
+      <div class="cc-left">
+        <div class="cc-icon" style="background:rgba(255,59,48,0.12)">❤️</div>
+        <div><div class="cc-label">Heart Rate</div><div><span class="cc-val" id="v-hr">—</span> <span class="cc-unit">bpm</span></div></div>
+      </div>
+      <span class="cc-delta d-neu" id="d-hr">7 days</span>
+    </div>
+    <div class="chart-wrap"><canvas id="c-hr"></canvas></div>
+    <div class="cc-footer">
+      <div class="cf-item"><div class="cf-val" id="min-hr">—</div><div class="cf-lbl">Min</div></div>
+      <div class="cf-item"><div class="cf-val" id="avg-hr">—</div><div class="cf-lbl">Avg</div></div>
+      <div class="cf-item"><div class="cf-val" id="max-hr">—</div><div class="cf-lbl">Max</div></div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+
+  <!-- HRV -->
+  <div class="chart-card">
+    <div class="cc-header">
+      <div class="cc-left">
+        <div class="cc-icon" style="background:rgba(175,82,222,0.12)">💜</div>
+        <div><div class="cc-label">HRV</div><div><span class="cc-val" id="v-hrv">—</span> <span class="cc-unit">ms</span></div></div>
+      </div>
+      <span class="cc-delta d-neu" id="d-hrv">7 days</span>
+    </div>
+    <div class="chart-wrap"><canvas id="c-hrv"></canvas></div>
+    <div class="cc-footer">
+      <div class="cf-item"><div class="cf-val" id="min-hrv">—</div><div class="cf-lbl">Min</div></div>
+      <div class="cf-item"><div class="cf-val" id="avg-hrv">—</div><div class="cf-lbl">Avg</div></div>
+      <div class="cf-item"><div class="cf-val" id="max-hrv">—</div><div class="cf-lbl">Max</div></div>
+    </div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <!-- SLEEP -->
+  <div class="sh">Sleep</div>
+  <div class="chart-card">
+    <div class="cc-header">
+      <div class="cc-left">
+        <div class="cc-icon" style="background:rgba(0,122,255,0.12)">🌙</div>
+        <div><div class="cc-label">Sleep</div><div><span class="cc-val" id="v-sleep">—</span> <span class="cc-unit">hrs</span></div></div>
+      </div>
+      <span class="cc-delta d-neu" id="d-sleep">7 days</span>
+    </div>
+    <div class="chart-wrap"><canvas id="c-sleep"></canvas></div>
+    <div class="cc-footer">
+      <div class="cf-item"><div class="cf-val" id="min-sleep">—</div><div class="cf-lbl">Min</div></div>
+      <div class="cf-item"><div class="cf-val" id="avg-sleep">—</div><div class="cf-lbl">Avg</div></div>
+      <div class="cf-item"><div class="cf-val" id="max-sleep">—</div><div class="cf-lbl">Max</div></div>
+    </div>
+  </div>
+
+  <div style="height:24px"></div>
 </main>
+
+<nav class="tab-bar">
+  <a href="index.html" class="tab">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
+    Summary
+  </a>
+  <a href="goals.html" class="tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
+    Goals
+  </a>
+  <a href="trends.html" class="tab on">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Trends
+  </a>
+</nav>
 
 <div id="toast"></div>
 
 <script>
-  // ─── Chart defaults ────────────────────────────────────────────────────────
-  Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
   Chart.defaults.font.size = 11;
 
-  const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  // Large title collapse
+  const obs = new IntersectionObserver(([e]) => {
+    document.getElementById('navTitle').classList.toggle('show', !e.isIntersecting);
+  }, { threshold: 0, rootMargin: '-44px 0px 0px 0px' });
+  obs.observe(document.getElementById('ltWrap'));
 
-  // ─── Color palette ─────────────────────────────────────────────────────────
-  const COLORS = {
-    steps:  { line: '#30d158', fill: 'rgba(48,209,88,' },
-    cal:    { line: '#ff9f0a', fill: 'rgba(255,159,10,' },
-    hr:     { line: '#ff453a', fill: 'rgba(255,69,58,' },
-    hrv:    { line: '#bf5af2', fill: 'rgba(191,90,242,' },
-    sleep:  { line: '#0071e3', fill: 'rgba(0,113,227,' },
-    dist:   { line: '#32ade6', fill: 'rgba(50,173,230,' },
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const PALETTE = {
+    steps: { line:'#34C759', fill:'rgba(52,199,89,' },
+    cal:   { line:'#FF9500', fill:'rgba(255,149,0,' },
+    hr:    { line:'#FF3B30', fill:'rgba(255,59,48,' },
+    hrv:   { line:'#AF52DE', fill:'rgba(175,82,222,' },
+    sleep: { line:'#007AFF', fill:'rgba(0,122,255,' },
+    dist:  { line:'#5AC8FA', fill:'rgba(90,200,250,' },
   };
 
-  // ─── Make gradient fill ────────────────────────────────────────────────────
-  function makeGradient(ctx, colorBase, height) {
-    const g = ctx.createLinearGradient(0, 0, 0, height);
-    g.addColorStop(0, colorBase + '0.18)');
-    g.addColorStop(1, colorBase + '0)');
-    return g;
-  }
-
-  // ─── Build a Chart.js config ───────────────────────────────────────────────
-  function buildConfig(canvasId, labels, values, colorKey, yFormatter) {
+  function makeChart(canvasId, labels, values, key, ttFmt) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
-    const h = canvas.parentElement.clientHeight || 120;
-    const grad = makeGradient(ctx, COLORS[colorKey].fill, h);
+    const h = canvas.parentElement.clientHeight || 110;
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, PALETTE[key].fill + '0.2)');
+    g.addColorStop(1, PALETTE[key].fill + '0)');
 
     return new Chart(ctx, {
       type: 'line',
@@ -461,245 +336,166 @@
         labels,
         datasets: [{
           data: values,
-          borderColor: COLORS[colorKey].line,
-          backgroundColor: grad,
+          borderColor: PALETTE[key].line,
+          backgroundColor: g,
           borderWidth: 2,
           tension: 0.4,
           fill: true,
-          pointRadius: values.map((_, i) => i === values.length - 1 ? 5 : 3),
-          pointBackgroundColor: values.map((_, i) => i === values.length - 1 ? COLORS[colorKey].line : '#fff'),
-          pointBorderColor: COLORS[colorKey].line,
+          pointRadius: values.map((_,i) => i === values.length-1 ? 5 : 3),
+          pointBackgroundColor: values.map((_,i) => i === values.length-1 ? PALETTE[key].line : '#fff'),
+          pointBorderColor: PALETTE[key].line,
           pointBorderWidth: 2,
-          pointHoverRadius: 6,
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 800, easing: 'easeOutQuart' },
+        animation: { duration: 700, easing: 'easeOutQuart' },
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(29,29,31,0.9)',
-            titleFont: { size: 11, weight: '500' },
-            bodyFont: { size: 13, weight: '600' },
-            padding: { x: 12, y: 8 },
-            cornerRadius: 10,
-            displayColors: false,
-            callbacks: {
-              title: (items) => items[0].label,
-              label: (item) => yFormatter ? yFormatter(item.raw) : item.raw,
-            }
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            titleFont: { size: 11 }, bodyFont: { size: 13, weight: '600' },
+            padding: { x:12, y:8 }, cornerRadius: 10, displayColors: false,
+            callbacks: { label: item => ttFmt ? ttFmt(item.raw) : item.raw }
           }
         },
         scales: {
-          x: {
-            grid: { display: false },
-            border: { display: false },
-            ticks: {
-              color: '#a1a1a6',
-              font: { size: 10 },
-              maxTicksLimit: 7,
-            }
-          },
-          y: {
-            display: false,
-            grid: { display: false },
-            border: { display: false },
-          }
+          x: { grid:{ display:false }, border:{ display:false }, ticks:{ color:'rgba(60,60,67,0.4)', font:{ size:10 } } },
+          y: { display: false }
         },
-        interaction: { mode: 'index', intersect: false },
+        interaction: { mode:'index', intersect:false }
       }
     });
   }
 
-  // ─── Stat helpers ──────────────────────────────────────────────────────────
-  function avg(arr) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
-  function min(arr) { return Math.min(...arr); }
-  function max(arr) { return Math.max(...arr); }
+  const avg = a => a.reduce((s,v)=>s+v,0)/a.length;
+  const fmtN = (v,d=0) => parseFloat(v.toFixed(d)).toLocaleString();
 
-  function setStats(key, values, fmt) {
-    document.getElementById('min-' + key).textContent = fmt(min(values));
-    document.getElementById('avg-' + key).textContent = fmt(avg(values));
-    document.getElementById('max-' + key).textContent = fmt(max(values));
+  function setStats(key, vals, fmt) {
+    const nz = vals.filter(v=>v>0);
+    if (!nz.length) return;
+    document.getElementById('min-'+key).textContent = fmt(Math.min(...nz));
+    document.getElementById('avg-'+key).textContent = fmt(avg(nz));
+    document.getElementById('max-'+key).textContent = fmt(Math.max(...nz));
   }
 
-  function setDelta(key, first, last, higherIsBetter, unitSuffix) {
+  function setDelta(key, first, last, higherGood) {
+    const el = document.getElementById('d-'+key);
     const diff = last - first;
-    const pct = first !== 0 ? ((diff / first) * 100).toFixed(0) : 0;
-    const el = document.getElementById('d-' + key);
-    const sign = diff >= 0 ? '+' : '';
-    el.textContent = sign + pct + '%' + (unitSuffix || '');
-
-    if (diff === 0) {
-      el.className = 'metric-delta delta-gray';
-    } else if ((diff > 0) === higherIsBetter) {
-      el.className = 'metric-delta delta-green';
-    } else {
-      el.className = 'metric-delta delta-red';
-    }
+    if (!first || diff === 0) { el.className='cc-delta d-neu'; el.textContent='—'; return; }
+    const pct = Math.round((diff/first)*100);
+    const up = diff > 0;
+    el.textContent = (up?'+':'') + pct + '%';
+    el.className = 'cc-delta ' + ((up===higherGood) ? 'd-up' : 'd-down');
   }
 
-  function fmtNum(n, decimals = 0) {
-    return parseFloat(n.toFixed(decimals)).toLocaleString();
-  }
-
-  // ─── Generate labels from dates ────────────────────────────────────────────
   function getLabels(history) {
     return history.map(d => {
       if (!d.date) return '—';
-      const parts = d.date.split('-');
-      const dt = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-      return DAYS_SHORT[dt.getDay()];
+      const [y,m,day] = d.date.split('-').map(Number);
+      return DAYS[new Date(y,m-1,day).getDay()];
     });
   }
 
-  // ─── Render all charts ─────────────────────────────────────────────────────
-  function renderCharts(history) {
+  function firstNZ(arr) { return arr.find(v=>v>0) || 0; }
+  function lastNZ(arr)  { return [...arr].reverse().find(v=>v>0) || 0; }
+
+  function render(history) {
     const labels = getLabels(history);
+    const steps = history.map(d=>d.steps||0);
+    const cal   = history.map(d=>d.activeEnergy||0);
+    const hr    = history.map(d=>d.heartRateAvg||d.restingHeartRate||0);
+    const hrv   = history.map(d=>d.hrv||0);
+    const sleep = history.map(d=>d.sleepTotal||0);
+    const dist  = history.map(d=>d.distance||0);
 
-    // Extract arrays (filter zeros for metrics that may be missing)
-    const steps    = history.map(d => d.steps        || 0);
-    const cal      = history.map(d => d.activeEnergy || 0);
-    const hr       = history.map(d => d.heartRateAvg || d.restingHeartRate || 0);
-    const hrv      = history.map(d => d.hrv          || 0);
-    const sleep    = history.map(d => d.sleepTotal   || 0);
-    const dist     = history.map(d => d.distance     || 0);
+    // Summary strip
+    const nz = arr => arr.filter(v=>v>0);
+    if (nz(steps).length)  document.getElementById('s-steps').textContent = Math.round(avg(nz(steps))).toLocaleString();
+    if (nz(cal).length)    document.getElementById('s-cal').textContent   = Math.round(avg(nz(cal))).toLocaleString();
+    if (nz(hr).length)     document.getElementById('s-hr').textContent    = Math.round(avg(nz(hr)));
+    if (nz(hrv).length)    document.getElementById('s-hrv').textContent   = Math.round(avg(nz(hrv)));
+    if (nz(sleep).length)  document.getElementById('s-sleep').textContent = avg(nz(sleep)).toFixed(1);
+    if (nz(dist).length)   document.getElementById('s-dist').textContent  = avg(nz(dist)).toFixed(1);
 
-    // Update summary bar
-    const validSteps = steps.filter(v => v > 0);
-    const validCal   = cal.filter(v => v > 0);
-    const validHR    = hr.filter(v => v > 0);
-    const validHRV   = hrv.filter(v => v > 0);
-    const validSleep = sleep.filter(v => v > 0);
-    const validDist  = dist.filter(v => v > 0);
+    // Latest values
+    document.getElementById('v-steps').textContent = lastNZ(steps).toLocaleString();
+    document.getElementById('v-cal').textContent   = Math.round(lastNZ(cal)).toLocaleString();
+    document.getElementById('v-hr').textContent    = Math.round(lastNZ(hr));
+    document.getElementById('v-hrv').textContent   = Math.round(lastNZ(hrv));
+    document.getElementById('v-sleep').textContent = lastNZ(sleep).toFixed(1);
+    document.getElementById('v-dist').textContent  = lastNZ(dist).toFixed(2);
 
-    if (validSteps.length) document.getElementById('s-steps').textContent = Math.round(avg(validSteps)).toLocaleString();
-    if (validCal.length)   document.getElementById('s-cal').textContent   = Math.round(avg(validCal)).toLocaleString();
-    if (validHR.length)    document.getElementById('s-hr').textContent    = Math.round(avg(validHR));
-    if (validHRV.length)   document.getElementById('s-hrv').textContent   = Math.round(avg(validHRV));
-    if (validSleep.length) document.getElementById('s-sleep').textContent = avg(validSleep).toFixed(1);
-    if (validDist.length)  document.getElementById('s-dist').textContent  = avg(validDist).toFixed(1);
-
-    // Latest values (last entry)
-    const last = history[history.length - 1] || {};
-    document.getElementById('v-steps').textContent = (last.steps || 0).toLocaleString();
-    document.getElementById('v-cal').textContent   = Math.round(last.activeEnergy || 0).toLocaleString();
-    document.getElementById('v-hr').textContent    = Math.round(last.heartRateAvg || last.restingHeartRate || 0);
-    document.getElementById('v-hrv').textContent   = Math.round(last.hrv || 0);
-    document.getElementById('v-sleep').textContent = (last.sleepTotal || 0).toFixed(1);
-    document.getElementById('v-dist').textContent  = (last.distance || 0).toFixed(1);
-
-    // Deltas (first vs last, skipping zeros)
-    const firstNonZero = (arr) => arr.find(v => v > 0) || 0;
-    const lastNonZero  = (arr) => [...arr].reverse().find(v => v > 0) || 0;
-
-    setDelta('steps', firstNonZero(steps),  lastNonZero(steps),  true);
-    setDelta('cal',   firstNonZero(cal),    lastNonZero(cal),    true);
-    setDelta('hr',    firstNonZero(hr),     lastNonZero(hr),     false); // lower HR = better
-    setDelta('hrv',   firstNonZero(hrv),    lastNonZero(hrv),    true);  // higher HRV = better
-    setDelta('sleep', firstNonZero(sleep),  lastNonZero(sleep),  true);
-    setDelta('dist',  firstNonZero(dist),   lastNonZero(dist),   true);
+    // Deltas
+    setDelta('steps', firstNZ(steps), lastNZ(steps), true);
+    setDelta('cal',   firstNZ(cal),   lastNZ(cal),   true);
+    setDelta('hr',    firstNZ(hr),    lastNZ(hr),    false);
+    setDelta('hrv',   firstNZ(hrv),   lastNZ(hrv),   true);
+    setDelta('sleep', firstNZ(sleep), lastNZ(sleep), true);
+    setDelta('dist',  firstNZ(dist),  lastNZ(dist),  true);
 
     // Stats
-    if (validSteps.length) setStats('steps', steps, v => Math.round(v).toLocaleString());
-    if (validCal.length)   setStats('cal',   cal,   v => Math.round(v).toLocaleString());
-    if (validHR.length)    setStats('hr',    hr,    v => Math.round(v) + ' bpm');
-    if (validHRV.length)   setStats('hrv',   hrv,   v => Math.round(v) + ' ms');
-    if (validSleep.length) setStats('sleep', sleep, v => v.toFixed(1) + ' h');
-    if (validDist.length)  setStats('dist',  dist,  v => v.toFixed(1) + ' mi');
+    setStats('steps', steps, v => Math.round(v).toLocaleString());
+    setStats('cal',   cal,   v => Math.round(v).toLocaleString());
+    setStats('hr',    hr,    v => Math.round(v) + ' bpm');
+    setStats('hrv',   hrv,   v => Math.round(v) + ' ms');
+    setStats('sleep', sleep, v => v.toFixed(1) + ' h');
+    setStats('dist',  dist,  v => v.toFixed(1) + ' mi');
 
-    // Build charts
-    buildConfig('c-steps', labels, steps, 'steps', v => v.toLocaleString() + ' steps');
-    buildConfig('c-cal',   labels, cal,   'cal',   v => Math.round(v) + ' kcal');
-    buildConfig('c-hr',    labels, hr,    'hr',    v => Math.round(v) + ' bpm');
-    buildConfig('c-hrv',   labels, hrv,   'hrv',   v => Math.round(v) + ' ms');
-    buildConfig('c-sleep', labels, sleep, 'sleep', v => v.toFixed(1) + ' hrs');
-    buildConfig('c-dist',  labels, dist,  'dist',  v => v.toFixed(2) + ' mi');
+    // Charts
+    makeChart('c-steps', labels, steps, 'steps', v => v.toLocaleString() + ' steps');
+    makeChart('c-cal',   labels, cal,   'cal',   v => Math.round(v) + ' kcal');
+    makeChart('c-hr',    labels, hr,    'hr',    v => Math.round(v) + ' bpm');
+    makeChart('c-hrv',   labels, hrv,   'hrv',   v => Math.round(v) + ' ms');
+    makeChart('c-sleep', labels, sleep, 'sleep', v => v.toFixed(1) + ' hrs');
+    makeChart('c-dist',  labels, dist,  'dist',  v => v.toFixed(2) + ' mi');
 
-    // Date range label
-    const first = history[0];
-    const lastD  = history[history.length - 1];
-    if (first && lastD && first.date && lastD.date) {
-      const fmt = d => {
-        const parts = d.split('-');
-        return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
-          .toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      };
-      document.getElementById('dateRangeMeta').textContent =
-        fmt(first.date) + ' – ' + fmt(lastD.date) + ' · Apple Health';
-    } else {
-      document.getElementById('dateRangeMeta').textContent = 'Last 7 days · Apple Health';
+    // Date range subtitle
+    const first = history[0], last = history[history.length-1];
+    if (first?.date && last?.date) {
+      const fmt = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('en-US',{month:'short',day:'numeric'}); };
+      document.getElementById('ltSub').textContent = fmt(first.date) + ' – ' + fmt(last.date) + ' · Apple Health';
     }
   }
 
-  // ─── Mock data (fallback when API is unavailable) ──────────────────────────
-  function getMockHistory() {
+  function mockData() {
     const today = new Date();
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(today);
-      d.setDate(today.getDate() - (6 - i));
-      const date = d.toISOString().split('T')[0];
+    return Array.from({length:7},(_,i)=>{
+      const d = new Date(today); d.setDate(today.getDate()-(6-i));
       return {
-        date,
-        steps:          7000 + Math.round(Math.random() * 4000),
-        activeEnergy:   300  + Math.round(Math.random() * 250),
-        heartRateAvg:   62   + Math.round(Math.random() * 12),
-        restingHeartRate: 58 + Math.round(Math.random() * 8),
-        hrv:            35   + Math.round(Math.random() * 25),
-        sleepTotal:     6.0  + parseFloat((Math.random() * 2).toFixed(1)),
-        distance:       2.5  + parseFloat((Math.random() * 3).toFixed(2)),
+        date: d.toISOString().split('T')[0],
+        steps:          6500 + Math.round(Math.random()*4000),
+        activeEnergy:   280  + Math.round(Math.random()*280),
+        heartRateAvg:   62   + Math.round(Math.random()*14),
+        hrv:            32   + Math.round(Math.random()*28),
+        sleepTotal:     5.8  + parseFloat((Math.random()*2.2).toFixed(1)),
+        distance:       2.2  + parseFloat((Math.random()*3.5).toFixed(2)),
       };
     });
   }
 
-  // ─── Load data ─────────────────────────────────────────────────────────────
   async function loadData() {
     try {
-      const res  = await fetch('/api/health');
+      const res = await fetch('/api/health');
       const json = await res.json();
-      const history = (json.data && json.data.history) || json.history;
-      if (Array.isArray(history) && history.length > 0) {
-        renderCharts(history.slice(-7));
-        return;
-      }
-    } catch (e) {
-      console.warn('API unavailable, using mock data:', e);
-    }
-    // Fallback to mock
-    renderCharts(getMockHistory());
-    document.getElementById('dateRangeMeta').textContent = 'Last 7 days · Demo data (API unavailable)';
+      const hist = (json.data && json.data.history) || json.history;
+      if (Array.isArray(hist) && hist.length > 0) { render(hist.slice(-7)); return; }
+    } catch(e) { console.warn('API unavailable, using demo data:', e); }
+    render(mockData());
+    document.getElementById('ltSub').textContent = 'Last 7 days · Demo data';
   }
 
-  // ─── Refresh button ────────────────────────────────────────────────────────
   async function refresh() {
-    const icon  = document.getElementById('syncIcon');
-    const label = document.getElementById('syncLabel');
-    const btn   = document.getElementById('syncBtn');
-
-    icon.style.animation = 'spin 0.8s linear infinite';
-    label.textContent = 'Loading…';
-    btn.style.pointerEvents = 'none';
-
-    // Destroy existing charts before re-rendering
-    Chart.instances && Object.values(Chart.instances).forEach(c => c.destroy());
-
+    const btn = document.getElementById('refreshBtn');
+    document.getElementById('refreshSvg').style.animation = 'spin 0.8s linear infinite';
+    btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
+    Object.values(Chart.instances).forEach(c => c.destroy());
     await loadData();
-
-    icon.style.animation = '';
-    label.textContent = 'Updated ✓';
-    btn.style.color = 'var(--green)';
-    btn.style.borderColor = 'var(--green)';
-
-    setTimeout(() => {
-      label.textContent = 'Refresh';
-      btn.style.color = '';
-      btn.style.borderColor = '';
-      btn.style.pointerEvents = '';
-    }, 2500);
+    document.getElementById('refreshSvg').style.animation = '';
+    btn.style.opacity = '1'; btn.style.pointerEvents = '';
   }
 
-  // ─── Init ──────────────────────────────────────────────────────────────────
   loadData();
 </script>
 </body>
