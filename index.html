@@ -796,8 +796,106 @@
     setTimeout(() => t.classList.remove('show'), 2500);
   }
 
-  // Load insights on page load
-  loadInsights();
+  // LOAD REAL APPLE HEALTH DATA
+  let healthData = null;
+  let historyData = [];
+
+  async function loadHealthData() {
+    try {
+      const res = await fetch('/api/health');
+      const json = await res.json();
+      if (json.success && json.data.today) {
+        healthData = json.data.today;
+        historyData = json.data.history || [];
+        applyHealthData();
+        drawSparklineFromHistory();
+        loadInsights();
+      } else {
+        loadInsights();
+      }
+    } catch (e) {
+      console.warn('Could not load health data:', e);
+      loadInsights();
+    }
+  }
+
+  function applyHealthData() {
+    if (!healthData) return;
+    const d = healthData;
+
+    if (d.steps) {
+      document.getElementById('stepsVal').textContent = d.steps.toLocaleString();
+      const stepGoal = parseInt(goals.stepGoal) || 10000;
+      const stepPct = Math.min(Math.round((d.steps / stepGoal) * 100), 100);
+      document.getElementById('stepsPct').textContent = stepPct + '%';
+      document.getElementById('stepsBar').style.width = stepPct + '%';
+      const remaining = Math.max(stepGoal - d.steps, 0);
+      document.getElementById('stepsDelta').textContent = remaining > 0 ? remaining.toLocaleString() + ' to goal' : '✓ Goal reached!';
+      document.getElementById('stepsDelta').className = 'metric-delta ' + (remaining === 0 ? 'delta-green' : 'delta-gray');
+    }
+
+    if (d.activeEnergy) {
+      document.getElementById('calVal').textContent = Math.round(d.activeEnergy).toLocaleString();
+    }
+
+    if (d.weight) {
+      document.getElementById('weightVal').textContent = d.weight.toFixed(1);
+    }
+
+    if (d.water) {
+      const glasses = Math.round(d.water / 8);
+      const waterGoal = parseInt(goals.waterGoal) || 8;
+      document.getElementById('waterVal').textContent = glasses;
+      document.getElementById('waterGoalDisplay').textContent = waterGoal;
+      const waterPct = Math.min(Math.round((glasses / waterGoal) * 100), 100);
+      document.getElementById('waterPct').textContent = waterPct + '%';
+      document.getElementById('waterBar').style.width = waterPct + '%';
+    }
+  }
+
+  function drawSparklineFromHistory() {
+    const stepData = historyData.filter(d => d.steps > 0).slice(0, 7).reverse();
+    if (stepData.length < 2) return;
+    const svg = document.getElementById('sparkSvg');
+    const W = 300, H = 60;
+    const values = stepData.map(d => d.steps);
+    const min = Math.min(...values) * 0.9;
+    const max = Math.max(...values) * 1.1;
+    const xs = values.map((_, i) => (i / (values.length - 1)) * W);
+    const ys = values.map(v => H - ((v - min) / (max - min)) * H);
+    const line = xs.map((x, i) => (i ? 'L' : 'M') + x + ',' + ys[i]).join(' ');
+    const area = line + ' L' + W + ',' + H + ' L0,' + H + ' Z';
+    svg.innerHTML = '<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity="0.15"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0"/></linearGradient></defs><path d="' + area + '" fill="url(#sg)"/><path d="' + line + '" fill="none" stroke="#0071e3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' + xs.map((x,i) => '<circle cx="' + x + '" cy="' + ys[i] + '" r="' + (i===values.length-1?4:2.5) + '" fill="' + (i===values.length-1?'#0071e3':'white') + '" stroke="#0071e3" stroke-width="1.5"/>').join('');
+    document.querySelector('.spark-footer').innerHTML = '<span>7 days ago: <b>' + stepData[0].steps.toLocaleString() + ' steps</b></span><span>Today: <b style="color:var(--blue)">' + stepData[stepData.length-1].steps.toLocaleString() + ' steps</b></span>';
+  }
+
+  // 2. Update buildContext to use real data
+  function buildContext() {
+    const g = goals;
+    const d = healthData || {};
+    const stepHistory = historyData.map(h => h.steps).filter(s => s > 0).slice(0, 7).reverse();
+    return 'User health data:\n' +
+      '- Current weight: ' + (d.weight || 'not logged') + ' lbs\n' +
+      '- Target weight: ' + (g.targetWeight || 'not set') + ' lbs\n' +
+      '- Starting weight: ' + (g.currentWeight || 'not set') + ' lbs\n' +
+      '- Timeframe: ' + (g.timeframe || '12') + ' weeks\n' +
+      '- Active calories burned today: ' + (d.activeEnergy || 0) + ' kcal\n' +
+      '- Steps today: ' + (d.steps || 0) + ' / ' + (g.stepGoal || 10000) + ' goal\n' +
+      '- Distance today: ' + (d.distance || 0) + ' miles\n' +
+      '- Exercise time today: ' + (d.exerciseTime || 0) + ' min\n' +
+      '- Stand hours: ' + (d.standHours || 0) + '\n' +
+      '- Resting heart rate: ' + (d.restingHeartRate || 'not logged') + ' bpm\n' +
+      '- HRV: ' + (d.hrv || 'not logged') + ' ms\n' +
+      '- Blood oxygen: ' + (d.bloodOxygen || 'not logged') + '%\n' +
+      '- Sleep last night: ' + (d.sleepTotal || 'not logged') + ' hrs\n' +
+      '- Step trend (7 days): ' + (stepHistory.join(' → ') || 'not available') + '\n' +
+      '- Age: ' + (g.age || 'not set') + ', Gender: ' + (g.gender || 'not set') + '\n' +
+      '- Activity level: ' + (g.activity || 'moderate') + '\n' +
+      'Note: Nutrition data (calories in, protein, carbs, fat) not yet connected - user logs manually.';
+  }
+
+  // Load health data first, which then triggers insights
+  loadHealthData();
 </script>
 </body>
 </html>
