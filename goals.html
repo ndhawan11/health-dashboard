@@ -64,6 +64,16 @@
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--blue); }
     .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      background: rgba(0,113,227,0.08); border: 1px solid rgba(0,113,227,0.2);
+      border-radius: 20px; font-family: inherit; font-size: 12px; font-weight: 600;
+      color: var(--blue); padding: 5px 13px; cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: rgba(0,113,227,0.14); }
+    .nav-btn svg { width: 13px; height: 13px; }
+    .nav-btn.spinning svg { animation: spin 0.8s linear infinite; }
     .avatar {
       width: 28px; height: 28px; border-radius: 50%;
       background: linear-gradient(135deg, var(--blue), var(--green));
@@ -262,6 +272,13 @@
     <li><a href="trends.html">Trends</a></li>
   </ul>
   <div class="nav-right">
+    <button class="nav-btn" id="syncBtn" onclick="syncGoals()">
+      <svg id="syncSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      Sync
+    </button>
     <div class="avatar">N</div>
   </div>
 </nav>
@@ -512,6 +529,22 @@
     document.getElementById('savedBadge').classList.remove('show');
     document.getElementById('goalSummary').style.display = 'none';
     showToast('Goals cleared');
+  }
+
+  function syncGoals() {
+    const btn = document.getElementById('syncBtn');
+    btn.classList.add('spinning'); btn.style.opacity = '0.6'; btn.style.pointerEvents = 'none';
+    // Reload saved goals from localStorage
+    const saved = localStorage.getItem('healthGoals');
+    if (saved) {
+      const g = JSON.parse(saved);
+      Object.keys(g).forEach(id => { const el = document.getElementById(id); if (el) el.value = g[id]; });
+      updateSummary();
+    }
+    setTimeout(() => {
+      btn.classList.remove('spinning'); btn.style.opacity = '1'; btn.style.pointerEvents = '';
+      showToast('Goals synced');
+    }, 600);
   }
 
   function showToast(msg) {
