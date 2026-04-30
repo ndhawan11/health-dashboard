@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Goals — Health Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --surface2: #f5f5f7;
+      --border: rgba(0,0,0,0.08);
+      --text: #1d1d1f;
+      --text2: #6e6e73;
+      --text3: #a1a1a6;
+      --blue: #0071e3;
+      --blue-light: #e8f1fb;
+      --green: #30d158;
+      --green-light: #e4f8eb;
+      --orange: #ff9f0a;
+      --orange-light: #fff4e0;
+      --purple: #bf5af2;
+      --purple-light: #f5ebfe;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --radius: 18px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; text-decoration: none; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--text2); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--blue); font-weight: 500; }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #0071e3, #30d158); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; }
+
+    main { max-width: 800px; margin: 0 auto; padding: 40px 32px; }
+
+    .page-header { margin-bottom: 32px; animation: fadeUp 0.4s ease both; }
+    .page-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+    .page-header .meta { color: var(--text2); font-size: 14px; margin-top: 4px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.10s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+    .card:nth-child(4) { animation-delay: 0.20s; }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: span 2; }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .field input, .field select {
+      background: var(--surface2);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+      appearance: none;
+    }
+
+    .field input:focus, .field select:focus {
+      border-color: var(--blue);
+      background: white;
+    }
+
+    .field input::placeholder { color: var(--text3); }
+
+    .input-with-unit {
+      position: relative;
+    }
+
+    .input-with-unit input {
+      padding-right: 48px;
+    }
+
+    .unit-label {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--text3);
+      pointer-events: none;
+    }
+
+    /* GOAL SUMMARY CARD */
+    .goal-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .summary-item {
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .summary-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .summary-value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .summary-unit {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 2px;
+    }
+
+    .summary-delta {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .delta-green { background: var(--green-light); color: #1a7a35; }
+    .delta-blue  { background: var(--blue-light);  color: #004fa3; }
+    .delta-orange { background: var(--orange-light); color: #a05c00; }
+
+    /* PROGRESS RING */
+    .ring-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0 8px;
+    }
+
+    .ring-label {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    /* TIMELINE */
+    .timeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 16px;
+    }
+
+    .timeline-point {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .timeline-dot.end { background: var(--green); }
+
+    .timeline-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--blue), var(--green));
+      margin: 0 4px;
+      margin-bottom: 22px;
+    }
+
+    .timeline-label {
+      font-size: 11px;
+      color: var(--text2);
+      text-align: center;
+    }
+
+    .timeline-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* SAVE BUTTON */
+    .btn-primary {
+      width: 100%;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: -0.1px;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover  { background: #0077ed; }
+    .btn-primary:active { transform: scale(0.99); }
+
+    .btn-secondary {
+      width: 100%;
+      background: var(--surface2);
+      color: var(--text);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover { background: #e8e8ed; }
+
+    /* SAVED STATE */
+    .saved-badge {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #1a7a35;
+      font-weight: 500;
+      margin-top: 12px;
+      justify-content: center;
+    }
+
+    .saved-badge.show { display: flex; }
+
+    #toast {
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(29,29,31,0.92); backdrop-filter: blur(20px);
+      color: white; font-size: 13px; font-weight: 500;
+      padding: 12px 20px; border-radius: 20px;
+      opacity: 0; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 24px 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: span 1; }
+      .goal-summary { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Health</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Summary</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="goals.html" class="active">Goals</a></li>
+    <li><a href="trends.html">Trends</a></li>
+  </ul>
+  <div class="avatar">ND</div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>Your Goals</h1>
+    <div class="meta">Set your starting point, targets, and timeframe. This drives all AI insights.</div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="card">
+    <div class="card-title">Profile</div>
+    <div class="card-subtitle">Basic info used to calculate your daily targets and recommendations.</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" id="firstName" placeholder="Nishant"/>
+      </div>
+      <div class="field">
+        <label>Age</label>
+        <div class="input-with-unit">
+          <input type="number" id="age" placeholder="38"/>
+          <span class="unit-label">yrs</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <select id="gender">
+          <option value="">Select...</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Height</label>
+        <div class="input-with-unit">
+          <input type="number" id="height" placeholder="70"/>
+          <span class="unit-label">in</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Activity Level</label>
+        <select id="activity">
+          <option value="sedentary">Sedentary (desk job, little exercise)</option>
+          <option value="light">Lightly active (1–3 days/week)</option>
+          <option value="moderate" selected>Moderately active (3–5 days/week)</option>
+          <option value="active">Very active (6–7 days/week)</option>
+          <option value="athlete">Athlete (2x/day training)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Primary Goal</label>
+        <select id="primaryGoal">
+          <option value="lose">Lose weight</option>
+          <option value="maintain">Maintain weight</option>
+          <option value="gain">Gain muscle</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURRENT STATE -->
+  <div class="card">
+    <div class="card-title">Where I Am Today</div>
+    <div class="card-subtitle">Your starting point. Be honest — this is only visible to you.</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Current Weight</label>
+        <div class="input-with-unit">
+          <input type="number" id="currentWeight" placeholder="182" step="0.1" oninput="updateSummary()"/>
+          <span class="unit-label">lbs</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Current Body Fat %</label>
+        <div class="input-with-unit">
+          <input type="number" id="currentBF" placeholder="22" step="0.1"/>
+          <span class="unit-label">%</span>
+        </div>
+      </div>
+      <div class="field full">
+        <label>Notes (optional)</label>
+        <input type="text" id="currentNotes" placeholder="e.g. Just getting started, feeling motivated"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARGETS -->
+  <div class="card">
+    <div class="card-title">Where I Want to Be</div>
+    <div class="card-subtitle">Set realistic targets. The AI will tell you if your timeline is achievable.</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Target Weight</label>
+        <div class="input-with-unit">
+          <input type="number" id="targetWeight" placeholder="170" step="0.1" oninput="updateSummary()"/>
+          <span class="unit-label">lbs</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Target Body Fat %</label>
+        <div class="input-with-unit">
+          <input type="number" id="targetBF" placeholder="15" step="0.1"/>
+          <span class="unit-label">%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Timeframe</label>
+        <select id="timeframe" oninput="updateSummary()">
+          <option value="4">4 weeks</option>
+          <option value="8">8 weeks</option>
+          <option value="12" selected>12 weeks</option>
+          <option value="16">16 weeks</option>
+          <option value="24">6 months</option>
+          <option value="52">1 year</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Weekly Weigh-in Day</label>
+        <select id="weighInDay">
+          <option value="monday" selected>Monday</option>
+          <option value="tuesday">Tuesday</option>
+          <option value="wednesday">Wednesday</option>
+          <option value="thursday">Thursday</option>
+          <option value="friday">Friday</option>
+          <option value="saturday">Saturday</option>
+          <option value="sunday">Sunday</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Daily Step Goal</label>
+        <div class="input-with-unit">
+          <input type="number" id="stepGoal" placeholder="10000"/>
+          <span class="unit-label">steps</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Daily Water Goal</label>
+        <div class="input-with-unit">
+          <input type="number" id="waterGoal" placeholder="8"/>
+          <span class="unit-label">glasses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- LIVE SUMMARY -->
+    <div id="goalSummary" style="display:none">
+      <div style="font-size:13px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Your Plan at a Glance</div>
+
+      <div class="timeline">
+        <div class="timeline-point">
+          <div class="timeline-dot"></div>
+          <div class="timeline-val" id="tlStart">—</div>
+          <div class="timeline-label">Today</div>
+        </div>
+        <div class="timeline-line"></div>
+        <div class="timeline-point">
+          <div class="timeline-dot end"></div>
+          <div class="timeline-val" id="tlEnd">—</div>
+          <div class="timeline-label" id="tlDate">Goal date</div>
+        </div>
+      </div>
+
+      <div class="goal-summary" style="margin-top:20px">
+        <div class="summary-item">
+          <div class="summary-label">To Lose</div>
+          <div class="summary-value" id="toLose">—</div>
+          <div class="summary-unit">lbs</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Per Week</div>
+          <div class="summary-value" id="perWeek">—</div>
+          <div class="summary-unit">lbs/week</div>
+          <div class="summary-delta" id="weeklyDelta" style="display:none"></div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Daily Deficit</div>
+          <div class="summary-value" id="dailyDeficit">—</div>
+          <div class="summary-unit">kcal/day</div>
+        </div>
+      </div>
+
+      <div id="feasibilityMsg" style="margin-top:14px; font-size:13px; padding:12px 16px; border-radius:10px;"></div>
+    </div>
+  </div>
+
+  <!-- SAVE -->
+  <div class="card">
+    <div class="card-title">Save Goals</div>
+    <div class="card-subtitle">Your goals are saved locally and used by the AI insights assistant on your dashboard.</div>
+    <button class="btn-primary" onclick="saveGoals()">Save Goals</button>
+    <button class="btn-secondary" onclick="clearGoals()">Reset</button>
+    <div class="saved-badge" id="savedBadge">✓ Goals saved — your dashboard is now personalized</div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+  // Load saved goals on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('healthGoals');
+    if (saved) {
+      const g = JSON.parse(saved);
+      Object.keys(g).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = g[id];
+      });
+      updateSummary();
+      document.getElementById('savedBadge').classList.add('show');
+    }
+  });
+
+  function updateSummary() {
+    const cw = parseFloat(document.getElementById('currentWeight').value);
+    const tw = parseFloat(document.getElementById('targetWeight').value);
+    const weeks = parseInt(document.getElementById('timeframe').value);
+
+    if (!cw || !tw || !weeks) {
+      document.getElementById('goalSummary').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('goalSummary').style.display = 'block';
+
+    const diff = cw - tw;
+    const perWeek = diff / weeks;
+    const dailyDeficit = Math.round(perWeek * 3500 / 7);
+
+    document.getElementById('tlStart').textContent = `${cw} lbs`;
+    document.getElementById('tlEnd').textContent = `${tw} lbs`;
+    document.getElementById('toLose').textContent = Math.abs(diff).toFixed(1);
+    document.getElementById('perWeek').textContent = Math.abs(perWeek).toFixed(2);
+    document.getElementById('dailyDeficit').textContent = dailyDeficit.toLocaleString();
+
+    // Goal date
+    const goalDate = new Date();
+    goalDate.setDate(goalDate.getDate() + weeks * 7);
+    document.getElementById('tlDate').textContent = goalDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    // Feasibility
+    const feasEl = document.getElementById('feasibilityMsg');
+    const weeklyDelta = document.getElementById('weeklyDelta');
+
+    if (Math.abs(perWeek) <= 0.5) {
+      feasEl.style.background = 'var(--green-light)';
+      feasEl.style.color = '#1a7a35';
+      feasEl.textContent = '✓ This is a healthy, sustainable pace. Great goal!';
+      weeklyDelta.textContent = 'Sustainable';
+      weeklyDelta.style.background = 'var(--green-light)';
+      weeklyDelta.style.color = '#1a7a35';
+    } else if (Math.abs(perWeek) <= 1.0) {
+      feasEl.style.background = 'var(--orange-light)';
+      feasEl.style.color = '#a05c00';
+      feasEl.textContent = '⚠ Aggressive but achievable with strict consistency. Consider extending your timeline.';
+      weeklyDelta.textContent = 'Aggressive';
+      weeklyDelta.style.background = 'var(--orange-light)';
+      weeklyDelta.style.color = '#a05c00';
+    } else {
+      feasEl.style.background = '#ffe5e3';
+      feasEl.style.color = '#c0392b';
+      feasEl.textContent = '✗ This pace exceeds safe weight loss guidelines (1 lb/week). Please extend your timeline.';
+      weeklyDelta.textContent = 'Not recommended';
+      weeklyDelta.style.background = '#ffe5e3';
+      weeklyDelta.style.color = '#c0392b';
+    }
+
+    weeklyDelta.style.display = 'inline-block';
+  }
+
+  function saveGoals() {
+    const ids = ['firstName','age','gender','height','activity','primaryGoal',
+                 'currentWeight','currentBF','currentNotes',
+                 'targetWeight','targetBF','timeframe','weighInDay','stepGoal','waterGoal'];
+    const goals = {};
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) goals[id] = el.value;
+    });
+    localStorage.setItem('healthGoals', JSON.stringify(goals));
+
+    document.getElementById('savedBadge').classList.add('show');
+    showToast('Goals saved successfully');
+  }
+
+  function clearGoals() {
+    localStorage.removeItem('healthGoals');
+    document.getElementById('savedBadge').classList.remove('show');
+    document.getElementById('goalSummary').style.display = 'none';
+    showToast('Goals cleared');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✓  ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>

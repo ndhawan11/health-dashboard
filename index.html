@@ -20,8 +20,6 @@
       --green-light: #e4f8eb;
       --orange: #ff9f0a;
       --orange-light: #fff4e0;
-      --red: #ff3b30;
-      --red-light: #ffe5e3;
       --purple: #bf5af2;
       --purple-light: #f5ebfe;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
@@ -43,7 +41,6 @@
     nav {
       background: rgba(255,255,255,0.85);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       padding: 0 32px;
       height: 52px;
@@ -55,19 +52,12 @@
       z-index: 100;
     }
 
-    .nav-logo { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
-
+    .nav-logo { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; text-decoration: none; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { color: var(--text2); text-decoration: none; font-size: 13px; transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
-    .nav-links a.active { color: var(--blue); }
-
-    .avatar {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: linear-gradient(135deg, #0071e3, #30d158);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; color: white;
-    }
+    .nav-links a.active { color: var(--blue); font-weight: 500; }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #0071e3, #30d158); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; }
 
     main { max-width: 1080px; margin: 0 auto; padding: 40px 32px; }
 
@@ -75,11 +65,16 @@
     .page-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
     .page-header .meta { color: var(--text2); font-size: 14px; margin-top: 4px; }
 
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
     .col-3  { grid-column: span 3; }
     .col-4  { grid-column: span 4; }
     .col-6  { grid-column: span 6; }
+    .col-8  { grid-column: span 8; }
     .col-12 { grid-column: span 12; }
 
     .card {
@@ -90,11 +85,6 @@
       animation: fadeUp 0.5s ease both;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
     .card:nth-child(1) { animation-delay:0.04s }
     .card:nth-child(2) { animation-delay:0.08s }
     .card:nth-child(3) { animation-delay:0.12s }
@@ -103,23 +93,14 @@
     .card:nth-child(6) { animation-delay:0.24s }
     .card:nth-child(7) { animation-delay:0.28s }
     .card:nth-child(8) { animation-delay:0.32s }
+    .card:nth-child(9) { animation-delay:0.36s }
 
-    .metric-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; margin-bottom: 14px;
-    }
-
+    .metric-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
     .metric-label { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
     .metric-value { font-size: 34px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
     .metric-unit  { font-size: 16px; font-weight: 400; color: var(--text2); margin-left: 2px; letter-spacing: 0; }
 
-    .metric-delta {
-      display: inline-flex; align-items: center; gap: 3px;
-      font-size: 12px; font-weight: 500; margin-top: 8px;
-      padding: 3px 8px; border-radius: 20px;
-    }
-
+    .metric-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; margin-top: 8px; padding: 3px 8px; border-radius: 20px; }
     .delta-green  { background: var(--green-light);  color: #1a7a35; }
     .delta-gray   { background: var(--surface2);     color: var(--text2); }
     .delta-blue   { background: var(--blue-light);   color: #004fa3; }
@@ -133,14 +114,11 @@
     .fill-orange { background: var(--orange); }
     .fill-purple { background: var(--purple); }
 
-    .section-label {
-      grid-column: span 12; font-size: 20px; font-weight: 700;
-      letter-spacing: -0.3px; margin-top: 8px; padding-bottom: 2px;
-    }
+    .section-label { grid-column: span 12; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-top: 8px; padding-bottom: 2px; }
 
     .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .card-title  { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; }
-    .card-action { font-size: 13px; color: var(--blue); cursor: pointer; font-weight: 500; }
+    .card-action { font-size: 13px; color: var(--blue); cursor: pointer; font-weight: 500; text-decoration: none; }
 
     .macro-row { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
     .macro-item { display: flex; align-items: center; gap: 12px; }
@@ -173,23 +151,189 @@
     .log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
     .field { display: flex; flex-direction: column; gap: 5px; }
     .field label { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; }
-    .field input {
-      background: var(--surface2); border: 1px solid transparent; border-radius: var(--radius-sm);
-      color: var(--text); font-family: inherit; font-size: 14px; padding: 10px 12px;
-      outline: none; transition: border-color 0.2s, background 0.2s; width: 100%;
-    }
+    .field input { background: var(--surface2); border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 14px; padding: 10px 12px; outline: none; transition: border-color 0.2s, background 0.2s; width: 100%; }
     .field input:focus { border-color: var(--blue); background: white; }
     .field input::placeholder { color: var(--text3); }
     .field.full { grid-column: span 2; }
 
-    .btn-primary {
-      width: 100%; background: var(--blue); color: white; border: none;
-      border-radius: var(--radius-sm); font-family: inherit; font-size: 14px;
-      font-weight: 600; padding: 12px; cursor: pointer; margin-top: 4px;
-      transition: background 0.2s, transform 0.1s; letter-spacing: -0.1px;
-    }
+    .btn-primary { width: 100%; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; font-weight: 600; padding: 12px; cursor: pointer; margin-top: 4px; transition: background 0.2s, transform 0.1s; }
     .btn-primary:hover  { background: #0077ed; }
     .btn-primary:active { transform: scale(0.99); }
+
+    /* GOAL BANNER */
+    .goal-banner {
+      background: linear-gradient(135deg, #0071e3 0%, #30d158 100%);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .goal-banner-left h3 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .goal-banner-left p  { font-size: 13px; opacity: 0.85; }
+
+    .goal-banner-right {
+      display: flex;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .goal-stat-val { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .goal-stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+    /* AI INSIGHTS */
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .insight-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    .insight-loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 12px;
+      color: var(--text2);
+      font-size: 13px;
+    }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* AI CHAT */
+    .chat-wrap {
+      display: flex;
+      flex-direction: column;
+      height: 340px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 4px 0 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .msg.user {
+      background: var(--blue);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.assistant {
+      background: var(--surface2);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.assistant.loading {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text2);
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid transparent;
+      border-radius: 20px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 10px 16px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .chat-input:focus { border-color: var(--blue); background: white; }
+    .chat-input::placeholder { color: var(--text3); }
+
+    .chat-send {
+      width: 36px; height: 36px;
+      background: var(--blue);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .chat-send:hover  { background: #0077ed; }
+    .chat-send:active { transform: scale(0.95); }
+
+    .quick-prompts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .quick-prompt {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: var(--blue-light);
+      color: var(--blue);
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    .quick-prompt:hover { background: #d4e9f9; }
 
     #toast {
       position: fixed; bottom: 32px; left: 50%;
@@ -204,19 +348,19 @@
 
     @media (max-width: 860px) {
       main { padding: 24px 16px; }
-      .col-3, .col-4, .col-6 { grid-column: span 12; }
+      .col-3, .col-4, .col-6, .col-8 { grid-column: span 12; }
     }
   </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-logo">Health</div>
+  <a href="index.html" class="nav-logo">Health</a>
   <ul class="nav-links">
-    <li><a href="#" class="active">Summary</a></li>
-    <li><a href="#">Nutrition</a></li>
-    <li><a href="#">Activity</a></li>
-    <li><a href="#">Trends</a></li>
+    <li><a href="index.html" class="active">Summary</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="goals.html">Goals</a></li>
+    <li><a href="trends.html">Trends</a></li>
   </ul>
   <div class="avatar">ND</div>
 </nav>
@@ -229,14 +373,40 @@
 
   <div class="grid">
 
+    <!-- GOAL BANNER -->
+    <div class="col-12" style="animation: fadeUp 0.4s ease both;">
+      <div class="goal-banner" id="goalBanner">
+        <div class="goal-banner-left">
+          <h3 id="bannerTitle">Set your goals to get started</h3>
+          <p id="bannerSub">Visit the Goals page to personalize your dashboard and AI insights.</p>
+        </div>
+        <div class="goal-banner-right" id="bannerStats" style="display:none">
+          <div>
+            <div class="goal-stat-val" id="bannerToLose">—</div>
+            <div class="goal-stat-label">lbs to go</div>
+          </div>
+          <div>
+            <div class="goal-stat-val" id="bannerWeeks">—</div>
+            <div class="goal-stat-label">weeks left</div>
+          </div>
+          <div>
+            <div class="goal-stat-val" id="bannerPct">—</div>
+            <div class="goal-stat-label">complete</div>
+          </div>
+        </div>
+        <a href="goals.html" id="bannerCta" style="color:white;font-size:13px;font-weight:600;text-decoration:none;opacity:0.9">Set Goals →</a>
+      </div>
+    </div>
+
+    <!-- METRIC CARDS -->
     <div class="card col-3">
       <div class="metric-icon" style="background:var(--blue-light)">⚖️</div>
       <div class="metric-label">Weight</div>
       <div><span class="metric-value" id="weightVal">182</span><span class="metric-unit">lbs</span></div>
       <div class="metric-delta delta-green">↓ 1.2 lbs this week</div>
       <div class="progress-wrap">
-        <div class="progress-meta"><span>Goal: 170 lbs</span><span>67%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-blue" style="width:67%"></div></div>
+        <div class="progress-meta"><span id="weightGoalLabel">Goal: 170 lbs</span><span id="weightPct">67%</span></div>
+        <div class="progress-track"><div class="progress-fill fill-blue" id="weightBar" style="width:67%"></div></div>
       </div>
     </div>
 
@@ -255,24 +425,60 @@
       <div class="metric-icon" style="background:var(--green-light)">👟</div>
       <div class="metric-label">Steps</div>
       <div><span class="metric-value" id="stepsVal">7,240</span></div>
-      <div class="metric-delta delta-gray">2,760 to goal</div>
+      <div class="metric-delta delta-gray" id="stepsDelta">2,760 to goal</div>
       <div class="progress-wrap">
-        <div class="progress-meta"><span>Goal: 10,000</span><span>72%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-green" style="width:72%"></div></div>
+        <div class="progress-meta"><span id="stepsGoalLabel">Goal: 10,000</span><span id="stepsPct">72%</span></div>
+        <div class="progress-track"><div class="progress-fill fill-green" id="stepsBar" style="width:72%"></div></div>
       </div>
     </div>
 
     <div class="card col-3">
       <div class="metric-icon" style="background:var(--purple-light)">💧</div>
       <div class="metric-label">Water</div>
-      <div><span class="metric-value" id="waterVal">6</span><span class="metric-unit">/ 8</span></div>
+      <div><span class="metric-value" id="waterVal">6</span><span class="metric-unit">/ <span id="waterGoalDisplay">8</span></span></div>
       <div class="metric-delta delta-blue">On track</div>
       <div class="progress-wrap">
-        <div class="progress-meta"><span>Daily goal</span><span>75%</span></div>
-        <div class="progress-track"><div class="progress-fill fill-purple" style="width:75%"></div></div>
+        <div class="progress-meta"><span>Daily goal</span><span id="waterPct">75%</span></div>
+        <div class="progress-track"><div class="progress-fill fill-purple" id="waterBar" style="width:75%"></div></div>
       </div>
     </div>
 
+    <!-- AI INSIGHTS -->
+    <div class="section-label">AI Insights</div>
+
+    <div class="card col-6">
+      <div class="card-header">
+        <div class="card-title">Today's Insights</div>
+        <div class="card-action" onclick="loadInsights()">Refresh</div>
+      </div>
+      <div class="insights-list" id="insightsList">
+        <div class="insight-loading"><div class="spinner"></div> Analyzing your data...</div>
+      </div>
+    </div>
+
+    <!-- AI CHAT -->
+    <div class="card col-6">
+      <div class="card-header">
+        <div class="card-title">Ask Your Health Assistant</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="quick-prompts">
+          <button class="quick-prompt" onclick="sendQuick('Am I on track for my weight goal?')">On track?</button>
+          <button class="quick-prompt" onclick="sendQuick('What should I eat today to hit my protein goal?')">Protein tips</button>
+          <button class="quick-prompt" onclick="sendQuick('How many more steps do I need today?')">Steps left</button>
+          <button class="quick-prompt" onclick="sendQuick('Is my calorie logging accurate based on my weight trend?')">Calorie check</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg assistant">Hi! I'm your health assistant. I know your goals and today's data. Ask me anything about your progress. 💪</div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chatInput" placeholder="Ask about your progress..." onkeydown="if(event.key==='Enter') sendChat()"/>
+          <button class="chat-send" onclick="sendChat()">↑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUTRITION & ACTIVITY -->
     <div class="section-label">Nutrition & Activity</div>
 
     <div class="card col-4">
@@ -341,10 +547,11 @@
       </div>
     </div>
 
-    <div class="section-label">Log & Progress</div>
+    <!-- LOG -->
+    <div class="section-label">Log Today</div>
 
     <div class="card col-6">
-      <div class="card-header"><div class="card-title">Log Today</div></div>
+      <div class="card-header"><div class="card-title">Log Entry</div></div>
       <div class="log-grid">
         <div class="field"><label>Weight (lbs)</label><input type="number" id="logWeight" placeholder="e.g. 182.5" step="0.1"/></div>
         <div class="field"><label>Calories</label><input type="number" id="logCalories" placeholder="e.g. 1800"/></div>
@@ -372,13 +579,64 @@
 <div id="toast"></div>
 
 <script>
+  // DATE + GREETING
   const now = new Date();
   const hour = now.getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('greeting').textContent = `${greet}, Nishant.`;
   document.getElementById('dateStr').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 
-  // Sparkline
+  // LOAD GOALS
+  let goals = {};
+  const savedGoals = localStorage.getItem('healthGoals');
+  if (savedGoals) {
+    goals = JSON.parse(savedGoals);
+    applyGoals();
+  }
+
+  function applyGoals() {
+    // Goal banner
+    if (goals.targetWeight && goals.currentWeight) {
+      const cw = parseFloat(goals.currentWeight);
+      const tw = parseFloat(goals.targetWeight);
+      const current = 182; // would come from Apple Health
+      const toLose = (current - tw).toFixed(1);
+      const totalLoss = cw - tw;
+      const achieved = cw - current;
+      const pct = Math.round((achieved / totalLoss) * 100);
+      const weeks = parseInt(goals.timeframe) || 12;
+
+      document.getElementById('bannerTitle').textContent = `Goal: ${tw} lbs by ${getGoalDate(weeks)}`;
+      document.getElementById('bannerSub').textContent = `${toLose} lbs remaining · ${weeks} weeks left`;
+      document.getElementById('bannerStats').style.display = 'flex';
+      document.getElementById('bannerToLose').textContent = toLose;
+      document.getElementById('bannerWeeks').textContent = weeks;
+      document.getElementById('bannerPct').textContent = Math.max(0, pct) + '%';
+      document.getElementById('bannerCta').textContent = 'Edit Goals →';
+
+      // Update weight card
+      document.getElementById('weightGoalLabel').textContent = `Goal: ${tw} lbs`;
+      const wPct = Math.round(((cw - current) / (cw - tw)) * 100);
+      document.getElementById('weightPct').textContent = Math.max(0, wPct) + '%';
+      document.getElementById('weightBar').style.width = Math.max(0, wPct) + '%';
+    }
+
+    if (goals.stepGoal) {
+      document.getElementById('stepsGoalLabel').textContent = `Goal: ${parseInt(goals.stepGoal).toLocaleString()}`;
+    }
+
+    if (goals.waterGoal) {
+      document.getElementById('waterGoalDisplay').textContent = goals.waterGoal;
+    }
+  }
+
+  function getGoalDate(weeks) {
+    const d = new Date();
+    d.setDate(d.getDate() + weeks * 7);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  // SPARKLINE
   const weights = [184.2, 183.8, 183.5, 183.1, 182.8, 182.3, 182.0];
   (function() {
     const svg = document.getElementById('sparkSvg');
@@ -391,7 +649,7 @@
     svg.innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity="0.15"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#sg)"/><path d="${line}" fill="none" stroke="#0071e3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="${i===weights.length-1?4:2.5}" fill="${i===weights.length-1?'#0071e3':'white'}" stroke="#0071e3" stroke-width="1.5"/>`).join('')}`;
   })();
 
-  // Streak
+  // STREAK
   (function() {
     const days = ['S','M','T','W','T','F','S'];
     const data = [1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0];
@@ -401,6 +659,7 @@
     }).join('');
   })();
 
+  // LOG
   function logData() {
     const get = id => document.getElementById(id).value;
     if (get('logWeight'))   document.getElementById('weightVal').textContent = parseFloat(get('logWeight')).toFixed(1);
@@ -414,11 +673,131 @@
       document.getElementById('workoutList').prepend(row);
     }
     ['logWeight','logCalories','logProtein','logSteps','logWater','logWorkout'].forEach(id => document.getElementById(id).value = '');
+    showToast('Entry saved');
+    setTimeout(loadInsights, 500);
+  }
+
+  // AI INSIGHTS
+  async function loadInsights() {
+    const list = document.getElementById('insightsList');
+    list.innerHTML = '<div class="insight-loading"><div class="spinner"></div> Analyzing your data...</div>';
+
+    const context = buildContext();
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `You are a personal health and nutrition coach. Analyze the user's health data and goals, then provide 3-4 specific, actionable insights. Be encouraging but honest. Format each insight as a JSON array with objects containing "icon" (single emoji) and "text" (1-2 sentences). Return ONLY valid JSON array, no other text.`,
+          messages: [{ role: 'user', content: context }]
+        })
+      });
+
+      const data = await response.json();
+      const text = data.content.find(b => b.type === 'text')?.text || '[]';
+      const clean = text.replace(/```json|```/g, '').trim();
+      const insights = JSON.parse(clean);
+
+      list.innerHTML = insights.map(i => `
+        <div class="insight-item">
+          <div class="insight-icon">${i.icon}</div>
+          <div>${i.text}</div>
+        </div>
+      `).join('');
+    } catch (e) {
+      list.innerHTML = `
+        <div class="insight-item"><div class="insight-icon">⚖️</div><div>You're down 1.2 lbs this week — right on track for your goal. Keep it up!</div></div>
+        <div class="insight-item"><div class="insight-icon">🍗</div><div>Protein is at 142g today. Try adding a Greek yogurt or protein shake to hit your 165g target.</div></div>
+        <div class="insight-item"><div class="insight-icon">👟</div><div>2,760 steps to go. A 25-minute walk after dinner will get you there and boost your metabolism.</div></div>
+      `;
+    }
+  }
+
+  // CHAT
+  let chatHistory = [];
+
+  function buildContext() {
+    const g = goals;
+    return `User health data:
+- Current weight: 182 lbs
+- Target weight: ${g.targetWeight || '170'} lbs
+- Starting weight: ${g.currentWeight || '184'} lbs
+- Timeframe: ${g.timeframe || '12'} weeks
+- Today's calories: 1,840 kcal (target: 2,000)
+- Protein: 142g / 165g target
+- Steps: 7,240 / ${g.stepGoal || '10,000'} goal
+- Water: 6 / ${g.waterGoal || '8'} glasses
+- Weight trend (7 days): 184.2 → 183.8 → 183.5 → 183.1 → 182.8 → 182.3 → 182.0 lbs
+- Today's workout: Morning Run (3.2 mi, 310 cal burned)
+- Age: ${g.age || 'not set'}, Gender: ${g.gender || 'not set'}
+- Activity level: ${g.activity || 'moderate'}`;
+  }
+
+  async function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    appendMsg('user', msg);
+
+    const loading = appendMsg('assistant', '...', true);
+
+    chatHistory.push({ role: 'user', content: msg });
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `You are a personal health and nutrition coach assistant. You have access to the user's health data and goals. Be specific, encouraging, and concise (2-4 sentences max). Reference their actual numbers when relevant.\n\n${buildContext()}`,
+          messages: chatHistory
+        })
+      });
+
+      const data = await response.json();
+      const reply = data.content.find(b => b.type === 'text')?.text || "I couldn't process that. Please try again.";
+      loading.remove();
+      appendMsg('assistant', reply);
+      chatHistory.push({ role: 'assistant', content: reply });
+    } catch (e) {
+      loading.remove();
+      appendMsg('assistant', "I'm having trouble connecting. Please check your internet and try again.");
+    }
+  }
+
+  function sendQuick(msg) {
+    document.getElementById('chatInput').value = msg;
+    sendChat();
+  }
+
+  function appendMsg(role, text, isLoading = false) {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = `msg ${role}${isLoading ? ' loading' : ''}`;
+    if (isLoading) {
+      div.innerHTML = '<div class="spinner"></div> Thinking...';
+    } else {
+      div.textContent = text;
+    }
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = '✓  Entry saved';
+    t.textContent = '✓  ' + msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
   }
+
+  // Load insights on page load
+  loadInsights();
 </script>
 </body>
 </html>
