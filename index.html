@@ -44,7 +44,7 @@
     }
 
     /* ── NAV ─────────────────────────────────────────────── */
-    nav {
+    nav.top-nav {
       position: sticky; top: 0; z-index: 100;
       height: 52px;
       background: rgba(255,255,255,0.82);
@@ -300,8 +300,8 @@
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="nav-logo">Health</a>
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">⬡ Health</a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Summary</a></li>
     <li><a href="goals.html">Goals</a></li>
@@ -309,7 +309,7 @@
   </ul>
   <div class="nav-right">
     <button class="nav-btn" id="syncBtn" onclick="syncData()">
-      <svg id="syncSvg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg id="syncSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
         <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
       </svg>
