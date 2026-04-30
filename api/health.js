@@ -1,6 +1,6 @@
 const { google } = require('googleapis');
 
-const FOLDER_ID = '1TWN6zRbrddACXojkVPwteEVradvGS6Fn';
+const FOLDER_ID = '1mv6AnwJrA1oFU55Htb7aGrnHSE5f6jRw';
 
 async function getAuthClient() {
   const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
@@ -18,7 +18,6 @@ async function getLatestSheetData(auth) {
   const drive = google.drive({ version: 'v3', auth });
   const sheets = google.sheets({ version: 'v4', auth });
 
-  // Find most recent file in the folder
   const filesRes = await drive.files.list({
     q: `'${FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet'`,
     orderBy: 'createdTime desc',
@@ -29,26 +28,21 @@ async function getLatestSheetData(auth) {
   const files = filesRes.data.files;
   if (!files || files.length === 0) return { today: null, history: [] };
 
-  // Get today's data from latest file
   const latest = files[0];
   const latestData = await sheets.spreadsheets.values.get({
     spreadsheetId: latest.id,
     range: 'A1:Z100',
   });
 
-  // Get up to 7 days of history for trends
   const history = [];
-  const filesToFetch = files.slice(0, 7);
-  for (const file of filesToFetch) {
+  for (const file of files.slice(0, 7)) {
     try {
       const res = await sheets.spreadsheets.values.get({
         spreadsheetId: file.id,
         range: 'A1:Z100',
       });
       history.push({ date: file.name, data: res.data.values });
-    } catch (e) {
-      // skip unreadable files
-    }
+    } catch (e) {}
   }
 
   return {
