@@ -2,156 +2,265 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Trends — Health</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #F2F2F7; --surface: #FFFFFF;
-      --fill: rgba(118,118,128,0.12); --sep: rgba(60,60,67,0.36);
-      --label: #000; --label2: rgba(60,60,67,0.6); --label3: rgba(60,60,67,0.3);
-      --blue: #007AFF; --green: #34C759; --orange: #FF9500;
-      --red: #FF3B30; --purple: #AF52DE; --teal: #5AC8FA;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg); color: var(--label);
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-      font-size: 17px; -webkit-font-smoothing: antialiased; padding-bottom: 83px;
+      --blue: #0071e3;
+      --blue-glow: rgba(0,113,227,0.18);
+      --green: #30d158;
+      --orange: #ff9f0a;
+      --red: #ff453a;
+      --purple: #bf5af2;
+      --teal: #5ac8fa;
+      --text: #1d1d1f;
+      --text2: #6e6e73;
+      --text3: #a1a1a6;
+      --glass: rgba(255,255,255,0.72);
+      --glass-border: rgba(255,255,255,0.6);
+      --glass-shadow: 0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.85);
+      --blur: blur(24px) saturate(180%);
+      --radius: 20px;
+      --radius-sm: 12px;
     }
 
-    /* NAV */
-    .nav-bar {
-      position: sticky; top: 0; z-index: 100; height: 44px;
-      background: rgba(242,242,247,0.85);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 0.5px solid var(--sep);
-      display: flex; align-items: center; justify-content: center; padding: 0 16px;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 88px;
+      background-color: #dde8ff;
+      background-image:
+        radial-gradient(at 20% 8%,  rgba(0,113,227,0.28)  0%, transparent 52%),
+        radial-gradient(at 82% 18%, rgba(48,209,88,0.18)  0%, transparent 48%),
+        radial-gradient(at 6%  72%, rgba(94,92,230,0.18)  0%, transparent 50%),
+        radial-gradient(at 88% 78%, rgba(0,199,190,0.15)  0%, transparent 46%),
+        radial-gradient(at 50% 50%, rgba(255,255,255,0.55) 0%, transparent 68%);
     }
-    .nav-title { font-size: 17px; font-weight: 600; letter-spacing: -0.41px; opacity: 0; transition: opacity 0.2s; position: absolute; }
-    .nav-title.show { opacity: 1; }
-    .nav-right { position: absolute; right: 16px; }
-    .nav-btn {
-      background: none; border: none; color: var(--blue);
-      font-size: 17px; cursor: pointer; padding: 4px;
-      display: flex; align-items: center;
-    }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* LARGE TITLE */
-    .lt-wrap { padding: 8px 16px 4px; }
-    .lt { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
-    .lt-sub { font-size: 13px; color: var(--label2); margin-top: 3px; }
+    /* ── NAV ─────────────────────────────────────────────── */
+    nav.top-nav {
+      position: sticky; top: 0; z-index: 100;
+      height: 52px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+    .nav-logo { font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.3px; }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--blue); }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 20px; font-family: inherit; font-size: 12px; font-weight: 500;
+      color: var(--text2); padding: 5px 13px; cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      backdrop-filter: blur(8px); transition: all 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.9); color: var(--text); }
+    .nav-btn svg { width: 14px; height: 14px; }
+    .nav-btn.spinning svg { animation: spin 0.8s linear infinite; }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: white;
+      box-shadow: 0 2px 8px rgba(0,113,227,0.35);
+    }
 
-    main { max-width: 680px; margin: 0 auto; }
-    .gap { height: 10px; }
-    .gap-lg { height: 18px; }
-    .sh { font-size: 13px; color: var(--label2); text-transform: uppercase; letter-spacing: 0.06em; padding: 18px 32px 6px; }
+    /* ── MAIN ────────────────────────────────────────────── */
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 24px; }
 
-    /* SUMMARY STRIP */
+    /* ── PAGE HEADER ─────────────────────────────────────── */
+    .page-header { margin-bottom: 28px; animation: fadeUp 0.4s ease both; }
+    .page-header h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; }
+    .page-header .sub { font-size: 14px; color: var(--text2); margin-top: 3px; }
+
+    /* ── SECTION LABEL ───────────────────────────────────── */
+    .section-label {
+      font-size: 11px; font-weight: 600; color: var(--text2);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin: 28px 0 10px;
+    }
+
+    /* ── GLASS CARD ──────────────────────────────────────── */
+    .card {
+      background: var(--glass);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
+      padding: 20px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .card:nth-child(1){animation-delay:.04s} .card:nth-child(2){animation-delay:.08s}
+    .card:nth-child(3){animation-delay:.12s} .card:nth-child(4){animation-delay:.16s}
+    .card:nth-child(5){animation-delay:.20s} .card:nth-child(6){animation-delay:.24s}
+
+    /* ── GRID ────────────────────────────────────────────── */
+    .grid { display: grid; gap: 14px; }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    /* ── SUMMARY STRIP ───────────────────────────────────── */
     .summary-strip {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 8px; margin: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 6px;
     }
-    .ss-item {
-      background: var(--surface); border-radius: 10px;
-      padding: 12px 10px; text-align: center;
-    }
-    .ss-icon { font-size: 16px; margin-bottom: 4px; }
-    .ss-val { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; line-height: 1; }
-    .ss-unit { font-size: 11px; color: var(--label2); margin-top: 1px; }
-    .ss-lbl { font-size: 10px; font-weight: 500; color: var(--label3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 3px; }
+    @media (max-width: 800px) { .summary-strip { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 500px) { .summary-strip { grid-template-columns: repeat(2, 1fr); } }
 
-    /* CHART CARD */
-    .chart-card {
-      background: var(--surface); border-radius: 10px;
-      margin: 0 16px; overflow: hidden;
+    .ss-item {
+      background: var(--glass);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--glass-shadow);
+      padding: 14px 12px; text-align: center;
+      animation: fadeUp 0.5s ease both;
     }
+    .ss-item:nth-child(1){animation-delay:.04s} .ss-item:nth-child(2){animation-delay:.07s}
+    .ss-item:nth-child(3){animation-delay:.10s} .ss-item:nth-child(4){animation-delay:.13s}
+    .ss-item:nth-child(5){animation-delay:.16s} .ss-item:nth-child(6){animation-delay:.19s}
+
+    .ss-icon { font-size: 18px; margin-bottom: 5px; }
+    .ss-val { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; color: var(--text); }
+    .ss-unit { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .ss-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+    /* ── CHART CARD ──────────────────────────────────────── */
+    .chart-card {
+      background: var(--glass);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
+      padding: 20px 20px 16px;
+      animation: fadeUp 0.5s ease both;
+    }
+
     .cc-header {
       display: flex; align-items: flex-start; justify-content: space-between;
-      padding: 14px 16px 0;
+      margin-bottom: 4px;
     }
-    .cc-left { display: flex; align-items: center; gap: 10px; }
+    .cc-left { display: flex; align-items: center; gap: 12px; }
     .cc-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-size: 16px;
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
     }
-    .cc-label { font-size: 12px; color: var(--label2); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500; }
-    .cc-val { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1.1; margin-top: 1px; }
-    .cc-unit { font-size: 13px; color: var(--label2); font-weight: 400; }
+    .cc-label {
+      font-size: 11px; color: var(--text2);
+      text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+    }
+    .cc-val { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; line-height: 1.1; margin-top: 1px; color: var(--text); }
+    .cc-unit { font-size: 14px; color: var(--text2); font-weight: 400; }
     .cc-delta {
-      font-size: 12px; font-weight: 600; padding: 4px 9px;
+      font-size: 12px; font-weight: 600; padding: 4px 10px;
       border-radius: 20px; white-space: nowrap; align-self: flex-start;
-      margin-top: 4px;
     }
-    .d-up   { background: rgba(52,199,89,0.12);  color: #1a7a35; }
-    .d-down { background: rgba(255,59,48,0.12);  color: #c0392b; }
-    .d-neu  { background: var(--fill);            color: var(--label2); }
+    .d-up   { background: rgba(48,209,88,0.12);  color: #1a7a35; }
+    .d-down { background: rgba(255,69,58,0.12);  color: #c0392b; }
+    .d-neu  { background: rgba(110,110,115,0.10); color: var(--text2); }
 
-    .chart-wrap { height: 110px; padding: 8px 16px 0; position: relative; }
+    .chart-wrap { height: 120px; margin: 10px 0 0; position: relative; }
     .chart-wrap canvas { display: block; }
 
     .cc-footer {
       display: flex; justify-content: space-around;
-      border-top: 0.5px solid var(--sep); margin: 10px 16px 0; padding: 10px 0 14px;
+      border-top: 1px solid rgba(255,255,255,0.4);
+      margin-top: 12px; padding-top: 12px;
     }
     .cf-item { text-align: center; }
-    .cf-val { font-size: 13px; font-weight: 600; }
-    .cf-lbl { font-size: 10px; color: var(--label3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+    .cf-val { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .cf-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; font-weight: 600; }
 
-    /* TOAST */
+    /* ── TOAST ───────────────────────────────────────────── */
     #toast {
-      position: fixed; bottom: 96px; left: 50%;
+      position: fixed; bottom: 100px; left: 50%;
       transform: translateX(-50%) translateY(12px);
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-      color: white; font-size: 14px; font-weight: 500;
-      padding: 11px 18px; border-radius: 20px;
+      background: rgba(29,29,31,0.88);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      color: white; font-size: 13px; font-weight: 500;
+      padding: 10px 18px; border-radius: 20px;
       opacity: 0; transition: all 0.25s ease;
-      pointer-events: none; white-space: nowrap;
+      pointer-events: none; white-space: nowrap; z-index: 200;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* TAB BAR */
-    .tab-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 83px; padding-bottom: 20px;
-      background: rgba(242,242,247,0.92);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-top: 0.5px solid var(--sep);
+    /* ── TAB BAR ─────────────────────────────────────────── */
+    nav.tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 72px; padding-bottom: 8px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-top: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 -1px 0 rgba(0,0,0,0.05);
       display: flex; z-index: 100;
     }
     .tab {
       flex: 1; display: flex; flex-direction: column; align-items: center;
-      justify-content: flex-start; padding-top: 10px; gap: 3px;
-      text-decoration: none; color: var(--label2);
+      justify-content: center; gap: 4px;
+      text-decoration: none; color: var(--text3);
       font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
+      transition: color 0.2s;
     }
     .tab.on { color: var(--blue); }
-    .tab svg { width: 25px; height: 25px; }
+    .tab:hover { color: var(--text2); }
+    .tab.on:hover { color: var(--blue); }
+    .tab svg { width: 22px; height: 22px; }
+    .tab-label { font-size: 10px; font-weight: 600; letter-spacing: 0.02em; }
   </style>
 </head>
 <body>
 
-<header class="nav-bar">
-  <span class="nav-title" id="navTitle">Trends</span>
+<nav class="top-nav">
+  <a class="nav-logo" href="index.html">⬡ Health</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Summary</a></li>
+    <li><a href="goals.html">Goals</a></li>
+    <li><a href="trends.html" class="active">Trends</a></li>
+  </ul>
   <div class="nav-right">
-    <button class="nav-btn" id="refreshBtn" onclick="refresh()" title="Refresh">
-      <svg id="refreshSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button class="nav-btn" id="refreshBtn" onclick="refresh()">
+      <svg id="refreshSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
         <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
       </svg>
+      Refresh
     </button>
+    <div class="avatar">N</div>
   </div>
-</header>
-
-<div class="lt-wrap" id="ltWrap">
-  <h1 class="lt">Trends</h1>
-  <p class="lt-sub" id="ltSub">Loading 7-day Apple Health data…</p>
-</div>
+</nav>
 
 <main>
-  <div class="gap"></div>
+  <div class="page-header">
+    <h1>Trends</h1>
+    <p class="sub" id="ltSub">Loading 7-day Apple Health data…</p>
+  </div>
 
   <!-- SUMMARY STRIP -->
   <div class="summary-strip">
@@ -163,54 +272,57 @@
     <div class="ss-item"><div class="ss-icon">📍</div><div class="ss-val" id="s-dist">—</div><div class="ss-unit">mi avg</div><div class="ss-lbl">Distance</div></div>
   </div>
 
-  <div class="gap-lg"></div>
-
-  <!-- STEPS -->
-  <div class="sh">Movement</div>
-  <div class="chart-card">
-    <div class="cc-header">
-      <div class="cc-left">
-        <div class="cc-icon" style="background:rgba(52,199,89,0.12)">👟</div>
-        <div><div class="cc-label">Steps</div><div><span class="cc-val" id="v-steps">—</span></div></div>
+  <!-- MOVEMENT -->
+  <div class="section-label">Movement</div>
+  <div class="grid g2">
+    <div class="chart-card">
+      <div class="cc-header">
+        <div class="cc-left">
+          <div class="cc-icon" style="background:rgba(48,209,88,0.12)">👟</div>
+          <div>
+            <div class="cc-label">Steps</div>
+            <div><span class="cc-val" id="v-steps">—</span></div>
+          </div>
+        </div>
+        <span class="cc-delta d-neu" id="d-steps">7 days</span>
       </div>
-      <span class="cc-delta d-neu" id="d-steps">7 days</span>
+      <div class="chart-wrap"><canvas id="c-steps"></canvas></div>
+      <div class="cc-footer">
+        <div class="cf-item"><div class="cf-val" id="min-steps">—</div><div class="cf-lbl">Min</div></div>
+        <div class="cf-item"><div class="cf-val" id="avg-steps">—</div><div class="cf-lbl">Avg</div></div>
+        <div class="cf-item"><div class="cf-val" id="max-steps">—</div><div class="cf-lbl">Max</div></div>
+      </div>
     </div>
-    <div class="chart-wrap"><canvas id="c-steps"></canvas></div>
-    <div class="cc-footer">
-      <div class="cf-item"><div class="cf-val" id="min-steps">—</div><div class="cf-lbl">Min</div></div>
-      <div class="cf-item"><div class="cf-val" id="avg-steps">—</div><div class="cf-lbl">Avg</div></div>
-      <div class="cf-item"><div class="cf-val" id="max-steps">—</div><div class="cf-lbl">Max</div></div>
+    <div class="chart-card">
+      <div class="cc-header">
+        <div class="cc-left">
+          <div class="cc-icon" style="background:rgba(90,200,250,0.12)">📍</div>
+          <div>
+            <div class="cc-label">Distance</div>
+            <div><span class="cc-val" id="v-dist">—</span> <span class="cc-unit">mi</span></div>
+          </div>
+        </div>
+        <span class="cc-delta d-neu" id="d-dist">7 days</span>
+      </div>
+      <div class="chart-wrap"><canvas id="c-dist"></canvas></div>
+      <div class="cc-footer">
+        <div class="cf-item"><div class="cf-val" id="min-dist">—</div><div class="cf-lbl">Min</div></div>
+        <div class="cf-item"><div class="cf-val" id="avg-dist">—</div><div class="cf-lbl">Avg</div></div>
+        <div class="cf-item"><div class="cf-val" id="max-dist">—</div><div class="cf-lbl">Max</div></div>
+      </div>
     </div>
   </div>
 
-  <div class="gap"></div>
-
-  <!-- DISTANCE -->
+  <!-- ENERGY -->
+  <div class="section-label">Energy</div>
   <div class="chart-card">
     <div class="cc-header">
       <div class="cc-left">
-        <div class="cc-icon" style="background:rgba(90,200,250,0.12)">📍</div>
-        <div><div class="cc-label">Distance</div><div><span class="cc-val" id="v-dist">—</span> <span class="cc-unit">mi</span></div></div>
-      </div>
-      <span class="cc-delta d-neu" id="d-dist">7 days</span>
-    </div>
-    <div class="chart-wrap"><canvas id="c-dist"></canvas></div>
-    <div class="cc-footer">
-      <div class="cf-item"><div class="cf-val" id="min-dist">—</div><div class="cf-lbl">Min</div></div>
-      <div class="cf-item"><div class="cf-val" id="avg-dist">—</div><div class="cf-lbl">Avg</div></div>
-      <div class="cf-item"><div class="cf-val" id="max-dist">—</div><div class="cf-lbl">Max</div></div>
-    </div>
-  </div>
-
-  <div class="gap-lg"></div>
-
-  <!-- ACTIVE CAL -->
-  <div class="sh">Energy</div>
-  <div class="chart-card">
-    <div class="cc-header">
-      <div class="cc-left">
-        <div class="cc-icon" style="background:rgba(255,149,0,0.12)">🔥</div>
-        <div><div class="cc-label">Active Calories</div><div><span class="cc-val" id="v-cal">—</span> <span class="cc-unit">kcal</span></div></div>
+        <div class="cc-icon" style="background:rgba(255,159,10,0.12)">🔥</div>
+        <div>
+          <div class="cc-label">Active Calories</div>
+          <div><span class="cc-val" id="v-cal">—</span> <span class="cc-unit">kcal</span></div>
+        </div>
       </div>
       <span class="cc-delta d-neu" id="d-cal">7 days</span>
     </div>
@@ -222,54 +334,57 @@
     </div>
   </div>
 
-  <div class="gap-lg"></div>
-
   <!-- HEART -->
-  <div class="sh">Heart</div>
-  <div class="chart-card">
-    <div class="cc-header">
-      <div class="cc-left">
-        <div class="cc-icon" style="background:rgba(255,59,48,0.12)">❤️</div>
-        <div><div class="cc-label">Heart Rate</div><div><span class="cc-val" id="v-hr">—</span> <span class="cc-unit">bpm</span></div></div>
+  <div class="section-label">Heart</div>
+  <div class="grid g2">
+    <div class="chart-card">
+      <div class="cc-header">
+        <div class="cc-left">
+          <div class="cc-icon" style="background:rgba(255,69,58,0.12)">❤️</div>
+          <div>
+            <div class="cc-label">Heart Rate</div>
+            <div><span class="cc-val" id="v-hr">—</span> <span class="cc-unit">bpm</span></div>
+          </div>
+        </div>
+        <span class="cc-delta d-neu" id="d-hr">7 days</span>
       </div>
-      <span class="cc-delta d-neu" id="d-hr">7 days</span>
+      <div class="chart-wrap"><canvas id="c-hr"></canvas></div>
+      <div class="cc-footer">
+        <div class="cf-item"><div class="cf-val" id="min-hr">—</div><div class="cf-lbl">Min</div></div>
+        <div class="cf-item"><div class="cf-val" id="avg-hr">—</div><div class="cf-lbl">Avg</div></div>
+        <div class="cf-item"><div class="cf-val" id="max-hr">—</div><div class="cf-lbl">Max</div></div>
+      </div>
     </div>
-    <div class="chart-wrap"><canvas id="c-hr"></canvas></div>
-    <div class="cc-footer">
-      <div class="cf-item"><div class="cf-val" id="min-hr">—</div><div class="cf-lbl">Min</div></div>
-      <div class="cf-item"><div class="cf-val" id="avg-hr">—</div><div class="cf-lbl">Avg</div></div>
-      <div class="cf-item"><div class="cf-val" id="max-hr">—</div><div class="cf-lbl">Max</div></div>
+    <div class="chart-card">
+      <div class="cc-header">
+        <div class="cc-left">
+          <div class="cc-icon" style="background:rgba(191,90,242,0.12)">💜</div>
+          <div>
+            <div class="cc-label">HRV</div>
+            <div><span class="cc-val" id="v-hrv">—</span> <span class="cc-unit">ms</span></div>
+          </div>
+        </div>
+        <span class="cc-delta d-neu" id="d-hrv">7 days</span>
+      </div>
+      <div class="chart-wrap"><canvas id="c-hrv"></canvas></div>
+      <div class="cc-footer">
+        <div class="cf-item"><div class="cf-val" id="min-hrv">—</div><div class="cf-lbl">Min</div></div>
+        <div class="cf-item"><div class="cf-val" id="avg-hrv">—</div><div class="cf-lbl">Avg</div></div>
+        <div class="cf-item"><div class="cf-val" id="max-hrv">—</div><div class="cf-lbl">Max</div></div>
+      </div>
     </div>
   </div>
-
-  <div class="gap"></div>
-
-  <!-- HRV -->
-  <div class="chart-card">
-    <div class="cc-header">
-      <div class="cc-left">
-        <div class="cc-icon" style="background:rgba(175,82,222,0.12)">💜</div>
-        <div><div class="cc-label">HRV</div><div><span class="cc-val" id="v-hrv">—</span> <span class="cc-unit">ms</span></div></div>
-      </div>
-      <span class="cc-delta d-neu" id="d-hrv">7 days</span>
-    </div>
-    <div class="chart-wrap"><canvas id="c-hrv"></canvas></div>
-    <div class="cc-footer">
-      <div class="cf-item"><div class="cf-val" id="min-hrv">—</div><div class="cf-lbl">Min</div></div>
-      <div class="cf-item"><div class="cf-val" id="avg-hrv">—</div><div class="cf-lbl">Avg</div></div>
-      <div class="cf-item"><div class="cf-val" id="max-hrv">—</div><div class="cf-lbl">Max</div></div>
-    </div>
-  </div>
-
-  <div class="gap-lg"></div>
 
   <!-- SLEEP -->
-  <div class="sh">Sleep</div>
+  <div class="section-label">Sleep</div>
   <div class="chart-card">
     <div class="cc-header">
       <div class="cc-left">
-        <div class="cc-icon" style="background:rgba(0,122,255,0.12)">🌙</div>
-        <div><div class="cc-label">Sleep</div><div><span class="cc-val" id="v-sleep">—</span> <span class="cc-unit">hrs</span></div></div>
+        <div class="cc-icon" style="background:rgba(0,113,227,0.12)">🌙</div>
+        <div>
+          <div class="cc-label">Sleep</div>
+          <div><span class="cc-val" id="v-sleep">—</span> <span class="cc-unit">hrs</span></div>
+        </div>
       </div>
       <span class="cc-delta d-neu" id="d-sleep">7 days</span>
     </div>
@@ -281,53 +396,48 @@
     </div>
   </div>
 
-  <div style="height:24px"></div>
+  <div style="height:12px"></div>
 </main>
 
 <nav class="tab-bar">
   <a href="index.html" class="tab">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
-    Summary
+    <span class="tab-label">Summary</span>
   </a>
   <a href="goals.html" class="tab">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
-    Goals
+    <span class="tab-label">Goals</span>
   </a>
   <a href="trends.html" class="tab on">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    Trends
+    <span class="tab-label">Trends</span>
   </a>
 </nav>
 
 <div id="toast"></div>
 
 <script>
-  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
+  Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
   Chart.defaults.font.size = 11;
-
-  // Large title collapse
-  const obs = new IntersectionObserver(([e]) => {
-    document.getElementById('navTitle').classList.toggle('show', !e.isIntersecting);
-  }, { threshold: 0, rootMargin: '-44px 0px 0px 0px' });
-  obs.observe(document.getElementById('ltWrap'));
 
   const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
   const PALETTE = {
-    steps: { line:'#34C759', fill:'rgba(52,199,89,' },
-    cal:   { line:'#FF9500', fill:'rgba(255,149,0,' },
-    hr:    { line:'#FF3B30', fill:'rgba(255,59,48,' },
-    hrv:   { line:'#AF52DE', fill:'rgba(175,82,222,' },
-    sleep: { line:'#007AFF', fill:'rgba(0,122,255,' },
-    dist:  { line:'#5AC8FA', fill:'rgba(90,200,250,' },
+    steps: { line:'#30d158', fill:'rgba(48,209,88,' },
+    cal:   { line:'#ff9f0a', fill:'rgba(255,159,10,' },
+    hr:    { line:'#ff453a', fill:'rgba(255,69,58,' },
+    hrv:   { line:'#bf5af2', fill:'rgba(191,90,242,' },
+    sleep: { line:'#0071e3', fill:'rgba(0,113,227,' },
+    dist:  { line:'#5ac8fa', fill:'rgba(90,200,250,' },
   };
 
   function makeChart(canvasId, labels, values, key, ttFmt) {
     const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const h = canvas.parentElement.clientHeight || 110;
+    const h = canvas.parentElement.clientHeight || 120;
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, PALETTE[key].fill + '0.2)');
+    g.addColorStop(0, PALETTE[key].fill + '0.22)');
     g.addColorStop(1, PALETTE[key].fill + '0)');
 
     return new Chart(ctx, {
@@ -338,11 +448,11 @@
           data: values,
           borderColor: PALETTE[key].line,
           backgroundColor: g,
-          borderWidth: 2,
+          borderWidth: 2.5,
           tension: 0.4,
           fill: true,
           pointRadius: values.map((_,i) => i === values.length-1 ? 5 : 3),
-          pointBackgroundColor: values.map((_,i) => i === values.length-1 ? PALETTE[key].line : '#fff'),
+          pointBackgroundColor: values.map((_,i) => i === values.length-1 ? PALETTE[key].line : 'rgba(255,255,255,0.9)'),
           pointBorderColor: PALETTE[key].line,
           pointBorderWidth: 2,
         }]
@@ -354,14 +464,20 @@
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            titleFont: { size: 11 }, bodyFont: { size: 13, weight: '600' },
-            padding: { x:12, y:8 }, cornerRadius: 10, displayColors: false,
+            backgroundColor: 'rgba(29,29,31,0.88)',
+            backdropFilter: 'blur(20px)',
+            titleFont: { size: 11, weight: '500' },
+            bodyFont: { size: 14, weight: '700' },
+            padding: { x:12, y:9 }, cornerRadius: 12, displayColors: false,
             callbacks: { label: item => ttFmt ? ttFmt(item.raw) : item.raw }
           }
         },
         scales: {
-          x: { grid:{ display:false }, border:{ display:false }, ticks:{ color:'rgba(60,60,67,0.4)', font:{ size:10 } } },
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: { color: 'rgba(110,110,115,0.6)', font: { size: 10, weight: '500' } }
+          },
           y: { display: false }
         },
         interaction: { mode:'index', intersect:false }
@@ -370,7 +486,6 @@
   }
 
   const avg = a => a.reduce((s,v)=>s+v,0)/a.length;
-  const fmtN = (v,d=0) => parseFloat(v.toFixed(d)).toLocaleString();
 
   function setStats(key, vals, fmt) {
     const nz = vals.filter(v=>v>0);
@@ -465,12 +580,12 @@
       const d = new Date(today); d.setDate(today.getDate()-(6-i));
       return {
         date: d.toISOString().split('T')[0],
-        steps:          6500 + Math.round(Math.random()*4000),
-        activeEnergy:   280  + Math.round(Math.random()*280),
-        heartRateAvg:   62   + Math.round(Math.random()*14),
-        hrv:            32   + Math.round(Math.random()*28),
-        sleepTotal:     5.8  + parseFloat((Math.random()*2.2).toFixed(1)),
-        distance:       2.2  + parseFloat((Math.random()*3.5).toFixed(2)),
+        steps:        6500 + Math.round(Math.random()*4000),
+        activeEnergy: 280  + Math.round(Math.random()*280),
+        heartRateAvg: 62   + Math.round(Math.random()*14),
+        hrv:          32   + Math.round(Math.random()*28),
+        sleepTotal:   5.8  + parseFloat((Math.random()*2.2).toFixed(1)),
+        distance:     2.2  + parseFloat((Math.random()*3.5).toFixed(2)),
       };
     });
   }
@@ -488,12 +603,10 @@
 
   async function refresh() {
     const btn = document.getElementById('refreshBtn');
-    document.getElementById('refreshSvg').style.animation = 'spin 0.8s linear infinite';
-    btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
+    btn.classList.add('spinning'); btn.style.opacity = '0.6'; btn.style.pointerEvents = 'none';
     Object.values(Chart.instances).forEach(c => c.destroy());
     await loadData();
-    document.getElementById('refreshSvg').style.animation = '';
-    btn.style.opacity = '1'; btn.style.pointerEvents = '';
+    btn.classList.remove('spinning'); btn.style.opacity = '1'; btn.style.pointerEvents = '';
   }
 
   loadData();

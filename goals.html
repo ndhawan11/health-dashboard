@@ -2,172 +2,289 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Goals — Health</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #F2F2F7; --surface: #FFFFFF;
-      --fill: rgba(118,118,128,0.12); --sep: rgba(60,60,67,0.36);
-      --label: #000; --label2: rgba(60,60,67,0.6); --label3: rgba(60,60,67,0.3);
-      --blue: #007AFF; --green: #34C759; --orange: #FF9500; --red: #FF3B30;
+      --blue: #0071e3;
+      --blue-glow: rgba(0,113,227,0.18);
+      --green: #30d158;
+      --orange: #ff9f0a;
+      --red: #ff453a;
+      --purple: #bf5af2;
+      --text: #1d1d1f;
+      --text2: #6e6e73;
+      --text3: #a1a1a6;
+      --glass: rgba(255,255,255,0.72);
+      --glass-border: rgba(255,255,255,0.6);
+      --glass-shadow: 0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.85);
+      --blur: blur(24px) saturate(180%);
+      --radius: 20px;
+      --radius-sm: 12px;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: var(--bg); color: var(--label);
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-      font-size: 17px; -webkit-font-smoothing: antialiased; padding-bottom: 83px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 88px;
+      background-color: #dde8ff;
+      background-image:
+        radial-gradient(at 20% 8%,  rgba(0,113,227,0.28)  0%, transparent 52%),
+        radial-gradient(at 82% 18%, rgba(48,209,88,0.18)  0%, transparent 48%),
+        radial-gradient(at 6%  72%, rgba(94,92,230,0.18)  0%, transparent 50%),
+        radial-gradient(at 88% 78%, rgba(0,199,190,0.15)  0%, transparent 46%),
+        radial-gradient(at 50% 50%, rgba(255,255,255,0.55) 0%, transparent 68%);
     }
 
-    /* NAV */
-    .nav-bar {
-      position: sticky; top: 0; z-index: 100; height: 44px;
-      background: rgba(242,242,247,0.85);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 0.5px solid var(--sep);
-      display: flex; align-items: center; justify-content: center; padding: 0 16px;
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      height: 52px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
     }
-    .nav-title { font-size: 17px; font-weight: 600; letter-spacing: -0.41px; opacity: 0; transition: opacity 0.2s; position: absolute; }
-    .nav-title.show { opacity: 1; }
-
-    /* LARGE TITLE */
-    .lt-wrap { padding: 8px 16px 4px; }
-    .lt { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
-    .lt-sub { font-size: 13px; color: var(--label2); margin-top: 3px; }
-
-    main { max-width: 680px; margin: 0 auto; }
-    .gap { height: 10px; }
-    .gap-lg { height: 18px; }
-
-    /* SECTION HEADER */
-    .sh { font-size: 13px; color: var(--label2); text-transform: uppercase; letter-spacing: 0.06em; padding: 18px 32px 6px; }
-    .sh-foot { font-size: 13px; color: var(--label2); padding: 6px 32px 0; line-height: 1.4; }
-
-    /* FORM GROUP */
-    .lg { background: var(--surface); border-radius: 10px; margin: 0 16px; overflow: hidden; }
-
-    .fr {
-      display: flex; align-items: center; min-height: 44px;
-      padding: 10px 16px; gap: 12px; position: relative;
+    .nav-logo { font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.3px; }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--blue); }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: white;
+      box-shadow: 0 2px 8px rgba(0,113,227,0.35);
     }
-    .fr + .fr::before {
-      content: ''; position: absolute; top: 0; left: 16px; right: 0;
-      height: 0.5px; background: var(--sep);
+
+    /* ── MAIN ────────────────────────────────────────────── */
+    main { max-width: 760px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ── PAGE HEADER ─────────────────────────────────────── */
+    .page-header { margin-bottom: 28px; animation: fadeUp 0.4s ease both; }
+    .page-header h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; }
+    .page-header .sub { font-size: 14px; color: var(--text2); margin-top: 3px; }
+
+    /* ── GLASS CARD ──────────────────────────────────────── */
+    .card {
+      background: var(--glass);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
     }
-    .fl { font-size: 17px; letter-spacing: -0.41px; flex-shrink: 0; min-width: 130px; }
+    .card:nth-child(1){animation-delay:.04s} .card:nth-child(2){animation-delay:.08s}
+    .card:nth-child(3){animation-delay:.12s} .card:nth-child(4){animation-delay:.16s}
+    .card:nth-child(5){animation-delay:.20s}
+
+    /* ── SECTION LABEL ───────────────────────────────────── */
+    .section-label {
+      font-size: 11px; font-weight: 600; color: var(--text2);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin: 28px 0 10px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── FORM ROWS ───────────────────────────────────────── */
+    .form-row {
+      display: flex; align-items: center;
+      padding: 13px 20px; gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.35);
+      position: relative; min-height: 48px;
+    }
+    .form-row:last-child { border-bottom: none; }
+    .form-row:hover { background: rgba(255,255,255,0.15); }
+
+    .fl {
+      font-size: 14px; font-weight: 500; color: var(--text);
+      flex-shrink: 0; min-width: 150px;
+    }
     .fi {
-      flex: 1; background: none; border: none; color: var(--label2);
-      font-family: inherit; font-size: 17px; text-align: right;
-      outline: none; letter-spacing: -0.41px; padding: 0;
+      flex: 1; background: none; border: none;
+      color: var(--text2); font-family: inherit; font-size: 14px;
+      text-align: right; outline: none;
     }
-    .fi::placeholder { color: var(--label3); }
+    .fi::placeholder { color: var(--text3); }
     .fsel {
-      flex: 1; background: none; border: none; color: var(--label2);
-      font-family: inherit; font-size: 17px; text-align: right;
-      text-align-last: right; outline: none; cursor: pointer;
-      -webkit-appearance: none; appearance: none; padding: 0;
+      flex: 1; background: none; border: none;
+      color: var(--text2); font-family: inherit; font-size: 14px;
+      text-align: right; text-align-last: right;
+      outline: none; cursor: pointer;
+      -webkit-appearance: none; appearance: none;
     }
-    .fu { font-size: 13px; color: var(--label3); margin-left: 4px; }
-    .chv { color: var(--label3); font-size: 14px; margin-left: 4px; }
+    .fu { font-size: 12px; color: var(--text3); margin-left: 4px; flex-shrink: 0; }
+    .chv { color: var(--text3); font-size: 13px; margin-left: 4px; flex-shrink: 0; }
 
-    /* SUMMARY CARD */
-    .summary-card {
-      background: var(--surface); border-radius: 10px;
-      margin: 0 16px; padding: 16px;
+    /* ── PLAN SUMMARY ────────────────────────────────────── */
+    .plan-card {
+      background: var(--glass);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
+      padding: 20px;
+      animation: fadeUp 0.5s ease 0.24s both;
     }
-    .sc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .sc-label { font-size: 13px; color: var(--label2); }
-    .sc-val { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
 
-    /* TIMELINE */
-    .timeline { display: flex; align-items: center; margin: 16px 0 4px; }
-    .tl-pt { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .tl-dot { width: 12px; height: 12px; border-radius: 50%; }
-    .tl-line { flex: 1; height: 2px; background: linear-gradient(to right, #007AFF, #34C759); margin: 0 6px 20px; }
-    .tl-val { font-size: 15px; font-weight: 600; }
-    .tl-lbl { font-size: 11px; color: var(--label2); }
+    .timeline {
+      display: flex; align-items: center; margin-bottom: 18px;
+    }
+    .tl-pt { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .tl-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.8);
+    }
+    .tl-line {
+      flex: 1; height: 2px;
+      background: linear-gradient(to right, var(--blue), var(--green));
+      margin: 0 10px 18px; border-radius: 2px;
+    }
+    .tl-val { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+    .tl-lbl { font-size: 11px; color: var(--text2); font-weight: 500; }
 
-    .stats-row { display: flex; gap: 10px; margin-top: 14px; }
-    .stat-box { flex: 1; background: var(--fill); border-radius: 10px; padding: 12px; text-align: center; }
-    .stat-val  { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-    .stat-unit { font-size: 12px; color: var(--label2); margin-top: 1px; }
-    .stat-lbl  { font-size: 11px; font-weight: 500; color: var(--label2); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+    .stats-row { display: flex; gap: 10px; }
+    .stat-box {
+      flex: 1;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: var(--radius-sm);
+      padding: 12px; text-align: center;
+    }
+    .stat-val  { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
+    .stat-unit { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .stat-lbl  { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
 
-    .feasibility { margin-top: 12px; font-size: 13px; padding: 10px 14px; border-radius: 10px; line-height: 1.45; }
+    .feasibility {
+      margin-top: 14px; font-size: 13px; font-weight: 500;
+      padding: 11px 14px; border-radius: var(--radius-sm); line-height: 1.45;
+    }
 
-    /* BUTTONS */
+    /* ── BUTTONS ─────────────────────────────────────────── */
     .btn-primary {
-      display: block; width: calc(100% - 32px); margin: 12px 16px 0;
-      background: var(--blue); color: white; border: none; border-radius: 12px;
-      font-family: inherit; font-size: 17px; font-weight: 600; padding: 14px;
-      cursor: pointer; letter-spacing: -0.41px;
+      display: block; width: 100%; margin-top: 14px;
+      background: var(--blue); color: white; border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      padding: 14px; cursor: pointer; letter-spacing: -0.2px;
+      box-shadow: 0 4px 16px rgba(0,113,227,0.35);
+      transition: all 0.2s;
     }
-    .btn-primary:active { opacity: 0.8; }
+    .btn-primary:hover { background: #0077ed; box-shadow: 0 6px 20px rgba(0,113,227,0.45); }
+    .btn-primary:active { opacity: 0.85; transform: scale(0.99); }
+
     .btn-secondary {
-      display: block; width: calc(100% - 32px); margin: 10px 16px 0;
-      background: var(--fill); color: var(--red); border: none; border-radius: 12px;
-      font-family: inherit; font-size: 17px; font-weight: 500; padding: 14px;
-      cursor: pointer; letter-spacing: -0.41px;
+      display: block; width: 100%; margin-top: 10px;
+      background: rgba(255,59,48,0.08); color: var(--red);
+      border: 1px solid rgba(255,59,48,0.2);
+      border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 15px; font-weight: 500;
+      padding: 14px; cursor: pointer; letter-spacing: -0.2px;
+      transition: all 0.2s;
     }
+    .btn-secondary:hover { background: rgba(255,59,48,0.14); }
     .btn-secondary:active { opacity: 0.8; }
 
-    .saved-row {
+    .saved-badge {
       display: none; align-items: center; justify-content: center; gap: 6px;
-      font-size: 13px; color: #1a7a35; font-weight: 500; padding: 10px 16px;
+      font-size: 13px; color: #1a7a35; font-weight: 500;
+      padding: 10px; margin-top: 8px;
+      background: rgba(48,209,88,0.1);
+      border: 1px solid rgba(48,209,88,0.25);
+      border-radius: var(--radius-sm);
     }
-    .saved-row.show { display: flex; }
+    .saved-badge.show { display: flex; }
 
-    /* TOAST */
+    /* ── TOAST ───────────────────────────────────────────── */
     #toast {
-      position: fixed; bottom: 96px; left: 50%;
+      position: fixed; bottom: 100px; left: 50%;
       transform: translateX(-50%) translateY(12px);
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-      color: white; font-size: 14px; font-weight: 500;
-      padding: 11px 18px; border-radius: 20px;
+      background: rgba(29,29,31,0.88);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      color: white; font-size: 13px; font-weight: 500;
+      padding: 10px 18px; border-radius: 20px;
       opacity: 0; transition: all 0.25s ease;
-      pointer-events: none; white-space: nowrap;
+      pointer-events: none; white-space: nowrap; z-index: 200;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* TAB BAR */
+    /* ── TAB BAR ─────────────────────────────────────────── */
     .tab-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 83px; padding-bottom: 20px;
-      background: rgba(242,242,247,0.92);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-top: 0.5px solid var(--sep);
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 72px; padding-bottom: 8px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-top: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 -1px 0 rgba(0,0,0,0.05);
       display: flex; z-index: 100;
     }
     .tab {
       flex: 1; display: flex; flex-direction: column; align-items: center;
-      justify-content: flex-start; padding-top: 10px; gap: 3px;
-      text-decoration: none; color: var(--label2);
+      justify-content: center; gap: 4px;
+      text-decoration: none; color: var(--text3);
       font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
+      transition: color 0.2s;
     }
     .tab.on { color: var(--blue); }
-    .tab svg { width: 25px; height: 25px; }
+    .tab:hover { color: var(--text2); }
+    .tab.on:hover { color: var(--blue); }
+    .tab svg { width: 22px; height: 22px; }
+    .tab-label { font-size: 10px; font-weight: 600; letter-spacing: 0.02em; }
   </style>
 </head>
 <body>
 
-<header class="nav-bar">
-  <span class="nav-title" id="navTitle">Goals</span>
-</header>
-
-<div class="lt-wrap" id="ltWrap">
-  <h1 class="lt">Goals</h1>
-  <p class="lt-sub">Drives your AI insights and progress tracking.</p>
-</div>
+<nav>
+  <a class="nav-logo" href="index.html">⬡ Health</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Summary</a></li>
+    <li><a href="goals.html" class="active">Goals</a></li>
+    <li><a href="trends.html">Trends</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="avatar">N</div>
+  </div>
+</nav>
 
 <main>
-  <div class="gap"></div>
+  <div class="page-header">
+    <h1>Goals</h1>
+    <p class="sub">Drives your AI insights and progress tracking.</p>
+  </div>
 
   <!-- PROFILE -->
-  <div class="sh">Profile</div>
-  <div class="lg">
-    <div class="fr"><span class="fl">First Name</span><input class="fi" type="text" id="firstName" placeholder="Nishant"/></div>
-    <div class="fr"><span class="fl">Age</span><input class="fi" type="number" id="age" placeholder="38"/><span class="fu">yrs</span></div>
-    <div class="fr">
+  <div class="section-label">Profile</div>
+  <div class="card">
+    <div class="form-row">
+      <span class="fl">First Name</span>
+      <input class="fi" type="text" id="firstName" placeholder="Nishant"/>
+    </div>
+    <div class="form-row">
+      <span class="fl">Age</span>
+      <input class="fi" type="number" id="age" placeholder="38"/>
+      <span class="fu">yrs</span>
+    </div>
+    <div class="form-row">
       <span class="fl">Gender</span>
       <select class="fsel" id="gender">
         <option value="">Select…</option>
@@ -177,8 +294,12 @@
       </select>
       <span class="chv">›</span>
     </div>
-    <div class="fr"><span class="fl">Height</span><input class="fi" type="number" id="height" placeholder="70"/><span class="fu">in</span></div>
-    <div class="fr">
+    <div class="form-row">
+      <span class="fl">Height</span>
+      <input class="fi" type="number" id="height" placeholder="70"/>
+      <span class="fu">in</span>
+    </div>
+    <div class="form-row">
       <span class="fl">Activity Level</span>
       <select class="fsel" id="activity">
         <option value="sedentary">Sedentary</option>
@@ -189,7 +310,7 @@
       </select>
       <span class="chv">›</span>
     </div>
-    <div class="fr">
+    <div class="form-row">
       <span class="fl">Primary Goal</span>
       <select class="fsel" id="primaryGoal">
         <option value="lose">Lose weight</option>
@@ -200,25 +321,39 @@
     </div>
   </div>
 
-  <div class="gap-lg"></div>
-
   <!-- CURRENT -->
-  <div class="sh">Where I Am Today</div>
-  <div class="sh-foot" style="padding-top:0;padding-bottom:6px;margin-top:-12px">Be honest — this is only visible to you.</div>
-  <div class="lg">
-    <div class="fr"><span class="fl">Current Weight</span><input class="fi" type="number" id="currentWeight" placeholder="182" step="0.1" oninput="updateSummary()"/><span class="fu">lbs</span></div>
-    <div class="fr"><span class="fl">Body Fat %</span><input class="fi" type="number" id="currentBF" placeholder="22" step="0.1"/><span class="fu">%</span></div>
-    <div class="fr"><span class="fl">Notes</span><input class="fi" type="text" id="currentNotes" placeholder="Optional"/></div>
+  <div class="section-label">Where I Am Today</div>
+  <div class="card">
+    <div class="form-row">
+      <span class="fl">Current Weight</span>
+      <input class="fi" type="number" id="currentWeight" placeholder="182" step="0.1" oninput="updateSummary()"/>
+      <span class="fu">lbs</span>
+    </div>
+    <div class="form-row">
+      <span class="fl">Body Fat %</span>
+      <input class="fi" type="number" id="currentBF" placeholder="22" step="0.1"/>
+      <span class="fu">%</span>
+    </div>
+    <div class="form-row">
+      <span class="fl">Notes</span>
+      <input class="fi" type="text" id="currentNotes" placeholder="Optional"/>
+    </div>
   </div>
 
-  <div class="gap-lg"></div>
-
   <!-- TARGETS -->
-  <div class="sh">Targets</div>
-  <div class="lg">
-    <div class="fr"><span class="fl">Target Weight</span><input class="fi" type="number" id="targetWeight" placeholder="170" step="0.1" oninput="updateSummary()"/><span class="fu">lbs</span></div>
-    <div class="fr"><span class="fl">Target Body Fat</span><input class="fi" type="number" id="targetBF" placeholder="15" step="0.1"/><span class="fu">%</span></div>
-    <div class="fr">
+  <div class="section-label">Targets</div>
+  <div class="card">
+    <div class="form-row">
+      <span class="fl">Target Weight</span>
+      <input class="fi" type="number" id="targetWeight" placeholder="170" step="0.1" oninput="updateSummary()"/>
+      <span class="fu">lbs</span>
+    </div>
+    <div class="form-row">
+      <span class="fl">Target Body Fat</span>
+      <input class="fi" type="number" id="targetBF" placeholder="15" step="0.1"/>
+      <span class="fu">%</span>
+    </div>
+    <div class="form-row">
       <span class="fl">Timeframe</span>
       <select class="fsel" id="timeframe" oninput="updateSummary()">
         <option value="4">4 weeks</option>
@@ -230,7 +365,7 @@
       </select>
       <span class="chv">›</span>
     </div>
-    <div class="fr">
+    <div class="form-row">
       <span class="fl">Weigh-in Day</span>
       <select class="fsel" id="weighInDay">
         <option value="monday" selected>Monday</option>
@@ -243,72 +378,82 @@
       </select>
       <span class="chv">›</span>
     </div>
-    <div class="fr"><span class="fl">Daily Steps</span><input class="fi" type="number" id="stepGoal" placeholder="10000"/><span class="fu">steps</span></div>
-    <div class="fr"><span class="fl">Daily Water</span><input class="fi" type="number" id="waterGoal" placeholder="8"/><span class="fu">glasses</span></div>
+    <div class="form-row">
+      <span class="fl">Daily Steps</span>
+      <input class="fi" type="number" id="stepGoal" placeholder="10000"/>
+      <span class="fu">steps</span>
+    </div>
+    <div class="form-row">
+      <span class="fl">Daily Water</span>
+      <input class="fi" type="number" id="waterGoal" placeholder="8"/>
+      <span class="fu">glasses</span>
+    </div>
   </div>
 
-  <!-- LIVE SUMMARY -->
+  <!-- PLAN SUMMARY -->
   <div id="goalSummary" style="display:none">
-    <div class="gap-lg"></div>
-    <div class="sh">Your Plan</div>
-    <div class="summary-card">
+    <div class="section-label">Your Plan</div>
+    <div class="plan-card">
       <div class="timeline">
         <div class="tl-pt">
-          <div class="tl-dot" style="background:#007AFF"></div>
+          <div class="tl-dot" style="background:var(--blue)"></div>
           <div class="tl-val" id="tlStart">—</div>
           <div class="tl-lbl">Today</div>
         </div>
         <div class="tl-line"></div>
         <div class="tl-pt">
-          <div class="tl-dot" style="background:#34C759"></div>
+          <div class="tl-dot" style="background:var(--green)"></div>
           <div class="tl-val" id="tlEnd">—</div>
           <div class="tl-lbl" id="tlDate">Goal date</div>
         </div>
       </div>
       <div class="stats-row">
-        <div class="stat-box"><div class="stat-val" id="toLose">—</div><div class="stat-unit">lbs</div><div class="stat-lbl">To lose</div></div>
-        <div class="stat-box"><div class="stat-val" id="perWeek">—</div><div class="stat-unit">lbs/wk</div><div class="stat-lbl">Per week</div></div>
-        <div class="stat-box"><div class="stat-val" id="dailyDeficit">—</div><div class="stat-unit">kcal/day</div><div class="stat-lbl">Deficit</div></div>
+        <div class="stat-box">
+          <div class="stat-val" id="toLose">—</div>
+          <div class="stat-unit">lbs</div>
+          <div class="stat-lbl">To lose</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="perWeek">—</div>
+          <div class="stat-unit">lbs/wk</div>
+          <div class="stat-lbl">Per week</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="dailyDeficit">—</div>
+          <div class="stat-unit">kcal/day</div>
+          <div class="stat-lbl">Deficit</div>
+        </div>
       </div>
       <div class="feasibility" id="feasMsg"></div>
     </div>
   </div>
 
-  <div class="gap-lg"></div>
-
   <!-- SAVE -->
   <button class="btn-primary" onclick="saveGoals()">Save Goals</button>
   <button class="btn-secondary" onclick="clearGoals()">Reset All Goals</button>
-  <div class="saved-row" id="savedBadge">✓ Goals saved — dashboard is now personalized</div>
+  <div class="saved-badge" id="savedBadge">✓ Goals saved — dashboard is now personalized</div>
 
-  <div style="height:24px"></div>
+  <div style="height:12px"></div>
 </main>
 
 <nav class="tab-bar">
   <a href="index.html" class="tab">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
-    Summary
+    <span class="tab-label">Summary</span>
   </a>
   <a href="goals.html" class="tab on">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
-    Goals
+    <span class="tab-label">Goals</span>
   </a>
   <a href="trends.html" class="tab">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    Trends
+    <span class="tab-label">Trends</span>
   </a>
 </nav>
 
 <div id="toast"></div>
 
 <script>
-  // Large title collapse
-  const obs = new IntersectionObserver(([e]) => {
-    document.getElementById('navTitle').classList.toggle('show', !e.isIntersecting);
-  }, { threshold: 0, rootMargin: '-44px 0px 0px 0px' });
-  obs.observe(document.getElementById('ltWrap'));
-
-  // Load saved goals
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('healthGoals');
     if (saved) {
@@ -340,13 +485,13 @@
     const feas = document.getElementById('feasMsg');
     const apw = Math.abs(perWk);
     if (apw <= 0.5) {
-      feas.style.cssText = 'background:rgba(52,199,89,0.1);color:#1a7a35';
+      feas.style.cssText = 'background:rgba(48,209,88,0.1);color:#1a7a35;border:1px solid rgba(48,209,88,0.2)';
       feas.textContent = '✓ Healthy, sustainable pace. Great goal!';
     } else if (apw <= 1.0) {
-      feas.style.cssText = 'background:rgba(255,149,0,0.1);color:#a05c00';
+      feas.style.cssText = 'background:rgba(255,159,10,0.1);color:#a05c00;border:1px solid rgba(255,159,10,0.2)';
       feas.textContent = '⚠ Aggressive but achievable. Consider extending your timeline.';
     } else {
-      feas.style.cssText = 'background:rgba(255,59,48,0.1);color:#c0392b';
+      feas.style.cssText = 'background:rgba(255,69,58,0.1);color:#c0392b;border:1px solid rgba(255,69,58,0.2)';
       feas.textContent = '✗ Exceeds safe guidelines (1 lb/week). Please extend your timeline.';
     }
   }
