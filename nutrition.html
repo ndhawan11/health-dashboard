@@ -489,8 +489,15 @@
       const deficit = Math.round(perWk * 3500 / 7);
       // Rough TDEE from weight + activity
       const w = parseFloat(g.currentWeight) * 0.453592; // lbs to kg
-      const h = (parseFloat(g.height) || 70) * 2.54;    // in to cm
-      const age = parseFloat(g.age) || 35;
+      const totalIn = (parseFloat(g.heightFt) || 5) * 12 + (parseFloat(g.heightIn) || 10);
+      const h = totalIn * 2.54;                           // inches to cm
+      let age = 35;
+      if (g.dob) {
+        const today = new Date(), birth = new Date(g.dob);
+        age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+      }
       const bmr = 10 * w + 6.25 * h - 5 * age + (g.gender === 'female' ? -161 : 5);
       const mults = { sedentary:1.2, light:1.375, moderate:1.55, active:1.725, athlete:1.9 };
       const tdee = Math.round(bmr * (mults[g.activity] || 1.55));

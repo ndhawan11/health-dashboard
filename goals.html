@@ -317,9 +317,13 @@
       <input class="fi" type="text" id="firstName" placeholder="Nishant"/>
     </div>
     <div class="form-row">
-      <span class="fl">Age</span>
-      <input class="fi" type="number" id="age" placeholder="38"/>
-      <span class="fu">yrs</span>
+      <span class="fl">Last Name</span>
+      <input class="fi" type="text" id="lastName" placeholder="Dhawan"/>
+    </div>
+    <div class="form-row">
+      <span class="fl">Date of Birth</span>
+      <input class="fi" type="date" id="dob" oninput="updateAge()"/>
+      <span class="fu" id="ageDisplay" style="min-width:52px;text-align:right"></span>
     </div>
     <div class="form-row">
       <span class="fl">Gender</span>
@@ -333,7 +337,9 @@
     </div>
     <div class="form-row">
       <span class="fl">Height</span>
-      <input class="fi" type="number" id="height" placeholder="70"/>
+      <input class="fi" type="number" id="heightFt" placeholder="5" min="1" max="8" style="max-width:60px;text-align:right"/>
+      <span class="fu">ft</span>
+      <input class="fi" type="number" id="heightIn" placeholder="10" min="0" max="11" style="max-width:60px;text-align:right"/>
       <span class="fu">in</span>
     </div>
     <div class="form-row">
@@ -491,11 +497,24 @@
 <div id="toast"></div>
 
 <script>
+  function updateAge() {
+    const dob = document.getElementById('dob').value;
+    const el  = document.getElementById('ageDisplay');
+    if (!dob) { el.textContent = ''; return; }
+    const today = new Date();
+    const birth = new Date(dob);
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+    el.textContent = age > 0 ? age + ' yrs' : '';
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('healthGoals');
     if (saved) {
       const g = JSON.parse(saved);
       Object.keys(g).forEach(id => { const el = document.getElementById(id); if (el) el.value = g[id]; });
+      updateAge();
       updateSummary();
       document.getElementById('savedBadge').classList.add('show');
     }
@@ -534,7 +553,7 @@
   }
 
   function saveGoals() {
-    const ids = ['firstName','age','gender','height','activity','primaryGoal',
+    const ids = ['firstName','lastName','dob','gender','heightFt','heightIn','activity','primaryGoal',
                  'currentWeight','currentBF','currentNotes',
                  'targetWeight','targetBF','timeframe','weighInDay','stepGoal','waterGoal'];
     const g = {};
